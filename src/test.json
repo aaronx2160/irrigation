@@ -1,0 +1,55 @@
+{
+    "data": [
+        {
+            "Id": "1228dfe4f238476dacdff20af0f3276f",
+            "WaterAreaCode": "30",
+            "WaterAreaName": "厦门市",
+            "WaterAreaLevel": 2,
+            "ParentWaterAreaId": "bf9893f38d214ce6b7d59160c3c3da8c",
+            "CreateTime": "2018-03-03T05:37:34.000Z",
+            "EditTime": "2018-03-20T06:54:02.000Z",
+            "Remark": "厦门"
+        },
+        {
+            "Id": "200c690948969d1316b377bdf0e73068",
+            "WaterAreaCode": "00",
+            "WaterAreaName": "区域",
+            "WaterAreaLevel": 0,
+            "ParentWaterAreaId": "",
+            "CreateTime": "2016-08-03T12:15:01.000Z",
+            "EditTime": "2018-03-20T06:53:33.000Z",
+            "Remark": "不计入区域编码"
+        },
+        {
+            "Id": "46921186084445de96788cd87fbb1004",
+            "WaterAreaCode": "31",
+            "WaterAreaName": "厦门水利局",
+            "WaterAreaLevel": 4,
+            "ParentWaterAreaId": "ebed55287b554eaa9ba127fe4d5842f3",
+            "CreateTime": "2018-03-20T06:57:16.000Z",
+            "EditTime": null,
+            "Remark": "闽江水利局"
+        },
+        {
+            "Id": "bf9893f38d214ce6b7d59160c3c3da8c",
+            "WaterAreaCode": "35",
+            "WaterAreaName": "福建省",
+            "WaterAreaLevel": 1,
+            "ParentWaterAreaId": "200c690948969d1316b377bdf0e73068",
+            "CreateTime": "2017-12-20T08:40:21.000Z",
+            "EditTime": "2018-03-20T06:58:17.000Z",
+            "Remark": "福建省"
+        },
+        {
+            "Id": "ebed55287b554eaa9ba127fe4d5842f3",
+            "WaterAreaCode": "06",
+            "WaterAreaName": "湖里区",
+            "WaterAreaLevel": 3,
+            "ParentWaterAreaId": "1228dfe4f238476dacdff20af0f3276f",
+            "CreateTime": "2018-03-20T06:56:52.000Z",
+            "EditTime": "2018-03-20T06:58:44.000Z",
+            "Remark": "湖里区"
+        }
+    ],
+    "meta": { "msg": "成功获取水管区域列表", "status": 200 }
+}
