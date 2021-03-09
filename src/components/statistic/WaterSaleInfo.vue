@@ -129,7 +129,6 @@ export default {
     return {
       deviceInfo: null,
       waterChargeInfoArr: null,
-
       options: [
         {
           value: '2020',
@@ -162,7 +161,6 @@ export default {
   },
   mounted() {
     this.deviceInfo = this.$store.getters.getWellList
-    console.log(this.deviceInfo)
     this.getData()
   },
   methods: {
@@ -175,6 +173,7 @@ export default {
         deviceId
       })
       this.waterChargeInfoArr = res.data
+      console.log(this.waterChargeInfoArr)
     }
   }
 }

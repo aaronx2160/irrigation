@@ -1,21 +1,20 @@
 <template>
-    <div class="wrapper">
-        <AMap></AMap>
-    </div>
+  <div class="wrapper">
+    <LiveCharts></LiveCharts>
+  </div>
 </template>
 
 <script>
-import AMap from './AMap'
+import LiveCharts from './liveInfo/LiveCharts'
 import { GETLIVEDATALIST, GETWATERAREAS } from '../store/types'
 export default {
-    components: {
-        // TiandiMap,
-        AMap,
-    },
-    mounted() {
-        this.$store.dispatch(GETLIVEDATALIST)
-        this.$store.dispatch(GETWATERAREAS)
-    },
+  components: {
+    LiveCharts
+  },
+  mounted() {
+    this.$store.dispatch(GETLIVEDATALIST)
+    this.$store.dispatch(GETWATERAREAS)
+  }
 }
 </script>
 
@@ -23,6 +22,6 @@ export default {
 html,
 body,
 .wrapper {
-    height: 100%;
+  height: 100%;
 }
 </style>
