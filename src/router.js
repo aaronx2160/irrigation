@@ -52,8 +52,8 @@ import LiveData from './components/liveInfo/LiveData'
 import WaterCardInfo from './components/statistic/WaterCardInfo'
 import LiveCams from './components/liveInfo/LiveCharts'
 import AddAWell from './components/settings/AddAWell'
-import EchartAMap from './components/charts/EchartAMap'
 import AMap from './components/AMap'
+import Test from './components/Test'
 
 Vue.use(Router)
 const router = new Router({
@@ -66,7 +66,7 @@ const router = new Router({
       component: Home,
       redirect: 'welcome',
       children: [
-        { path: '/test', component: EchartAMap },
+        { path: '/test', component: Test },
         { path: '/monitor/remote.do', component: LiveCams },
         { path: '/monitor/data.do', component: LiveData },
         { path: '/welcome', component: Welcome },

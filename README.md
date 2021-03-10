@@ -1,3 +1,10 @@
+###数据库调整记录
+
+- add column token in sysuser table
+- add column asActive in sysuser table
+- add column MenuId in sysrole table
+- add tables syswaterarea2 and sysarea2
+
 # shop_admin
 
 ## Project setup

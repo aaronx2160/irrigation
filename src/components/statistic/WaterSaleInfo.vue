@@ -66,9 +66,9 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="item in waterChargeInfoArr" :key="item.Id">
+            <tr v-for="(item, index) in waterChargeInfoArr" :key="item.Id">
               <td>{{ item.DeviceCode }}</td>
-              <td>{{ item.DeviceCode }}</td>
+              <td>{{ deviceNames[index] }}</td>
               <td>{{ item.CardCode }}</td>
               <td>{{ item.CardType }}</td>
               <td>充值</td>
@@ -124,11 +124,13 @@
 </template>
 
 <script>
+import getDeviceNames from '../../utils/getDeviceNames'
 export default {
   data() {
     return {
       deviceInfo: null,
       waterChargeInfoArr: null,
+      deviceNames: null,
       options: [
         {
           value: '2020',
@@ -173,7 +175,11 @@ export default {
         deviceId
       })
       this.waterChargeInfoArr = res.data
-      console.log(this.waterChargeInfoArr)
+
+      this.deviceNames = getDeviceNames(
+        this.deviceInfo,
+        this.waterChargeInfoArr
+      )
     }
   }
 }
