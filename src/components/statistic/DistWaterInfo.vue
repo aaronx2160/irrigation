@@ -10,7 +10,12 @@
         <div class="region">
           <template>
             用水类型：
-            <el-select v-model="wellUseVal" placeholder="请选择" size="mini">
+            <el-select
+              v-model="wellUseVal"
+              placeholder="请选择"
+              size="mini"
+              @change="handleSelectSearch"
+            >
               <el-option
                 v-for="item in wellUse"
                 :key="item"
@@ -22,7 +27,12 @@
           </template>
           <template>
             配水年份：
-            <el-select v-model="yearVal" placeholder="请选择" size="mini">
+            <el-select
+              v-model="yearVal"
+              placeholder="请选择"
+              size="mini"
+              @change="handleSelectSearch"
+            >
               <el-option
                 v-for="item in yearArr"
                 :key="item"
@@ -142,7 +152,7 @@ export default {
       pageData: null,
       pageNum: 1,
       filterOn: false,
-      searchBy: { DeviceCode: null, DeviceName: null },
+      searchBy: { DeviceCode: '', DeviceName: '' },
       searchFlag: ''
     }
   },
@@ -176,18 +186,32 @@ export default {
       this.getPageData()
     },
     handleInputKeyIn(flag) {
+      const { DeviceCode, DeviceName } = this.searchBy
+      if (DeviceCode === '' && DeviceName === '') {
+        this.getPageData()
+        this.filterOn = false
+      }
       this.searchFlag = flag
       flag === 'DeviceName'
         ? (this.searchBy.DeviceCode = '')
         : (this.searchBy.DeviceName = '')
     },
     handleInputSearch() {
+      const { DeviceCode, DeviceName } = this.searchBy
+      if (DeviceCode === '' && DeviceName === '') return
       this.pageData = this.waterPlan.filter(item => {
         return item[this.searchFlag] === this.searchBy[this.searchFlag]
       })
       this.filterOn = true
     },
-    handleSelectSearch() {},
+    handleSelectSearch() {
+      const filteredData = this.waterPlan.filter(item => {
+        return (
+          item.WellUse === this.wellUseVal && item.DistYear === this.yearVal
+        )
+      })
+      this.pageData = pageNation(filteredData, this.pageNum, 10).newArr
+    },
     searchReset() {
       this.wellUseVal = '灌溉'
       this.yearVal = new Date().getFullYear()

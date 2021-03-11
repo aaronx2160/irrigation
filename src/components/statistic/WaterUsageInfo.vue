@@ -9,23 +9,36 @@
       <div class="card-header">
         <template>
           <el-form label-width="auto" :model="formSearch" ref="formSearch">
-            <el-form-item label="机井名称:">
+            <el-form-item label="选择时间：" prop="dataArr">
+              <el-date-picker
+                v-model="formSearch.dataArr"
+                type="daterange"
+                range-separator="至"
+                start-placeholder="开始日期"
+                end-placeholder="结束日期"
+                size="mini"
+              >
+              </el-date-picker>
+            </el-form-item>
+            <el-form-item label="机井名称:" prop="DeviceName">
               <el-input
                 size="mini"
-                v-model="formSearch.DeviceCode"
-                @focus="handleInputFocus((key = 'DeviceCode'))"
-                @input="handleInput"
+                v-model.trim="formSearch.DeviceName"
+                @input="handleInputKeyIn('DeviceName')"
               ></el-input>
             </el-form-item>
-            <el-form-item label="机井编码:">
-              <el-input size="mini"></el-input>
-            </el-form-item>
-            <el-form-item label="水卡卡号:">
+            <el-form-item label="机井编码:" prop="DeviceCode">
               <el-input
                 size="mini"
-                v-model="formSearch.CardCode"
-                @focus="handleInputFocus((key = 'CardCode'))"
-                @input="handleInput"
+                v-model.trim="formSearch.DeviceCode"
+                @input="handleInputKeyIn('DeviceCode')"
+              ></el-input>
+            </el-form-item>
+            <el-form-item label="水卡卡号:" prop="CardCode">
+              <el-input
+                size="mini"
+                v-model.trim="formSearch.CardCode"
+                @input="handleInputKeyIn('CardCode')"
               ></el-input>
             </el-form-item>
             <el-button
@@ -53,14 +66,11 @@
                 >导出
               </el-button>
             </download-excel>
-            <el-button type="warning" size="small" icon="el-icon-search"
-              >导入
-            </el-button>
           </el-form>
         </template>
       </div>
       <div class="chart">
-        <h3>总用水量：0吨</h3>
+        <h3>{{ '总用水量：' + totalUsage + '吨' }}</h3>
 
         <el-tag
           type="primary"
@@ -69,9 +79,9 @@
           @click="UsageDialogVisible = true"
           ><i class="el-icon-data-analysis"></i>图表显示</el-tag
         >
-        <el-tag size="mini"
-          >时间区间：2020-12-04 14:29:01 ~ 2021-01-04 14:29:01</el-tag
-        >
+        <el-tag size="mini">
+          {{ searchDate }}
+        </el-tag>
       </div>
       <v-simple-table>
         <thead>
@@ -79,8 +89,8 @@
             <th>机井编码</th>
             <th>机井名称</th>
             <th>水卡卡号</th>
-            <th>已用水量</th>
-            <th>剩余水量</th>
+            <th>已用水量（m³）</th>
+            <th>剩余水量（m³）</th>
             <th>开泵时间</th>
             <th>关泵时间</th>
           </tr>
@@ -110,19 +120,7 @@
       :visible.sync="UsageDialogVisible"
       width="80%"
     >
-      <!--                <el-form label-width="auto">-->
-      <!--                    <el-form-item label="统计类型">-->
-      <!--                        <el-select v-model="" placeholder="请选择"> </el-select>-->
-      <!--                    </el-form-item>-->
-      <!--                    <el-form-item label="用水机井">-->
-      <!--                        <el-select v-model="" placeholder="请选择">-->
-      <!--                            &lt;!&ndash;                            <el-option> </el-option>&ndash;&gt;-->
-      <!--                        </el-select>-->
-      <!--                    </el-form-item>-->
-      <!--                </el-form>-->
-
       <span slot="footer" class="dialog-footer">
-        <!--                <el-button @click="UsageDialogVisible = false">取 消</el-button>-->
         <el-button type="primary" @click="UsageDialogVisible = false"
           >确 定</el-button
         >
@@ -133,10 +131,20 @@
 
 <script>
 import getDeviceNames from '../../utils/getDeviceNames'
+import getYMDHMS from '../../utils/time'
 export default {
   data() {
     return {
-      formSearch: { DeviceCode: '', CardCode: '' },
+      totalUsage: 0,
+      currentYear: new Date().getFullYear(),
+      currentMonth: new Date().getMonth() + 1,
+      formSearch: {
+        searchType: '',
+        dataArr: [],
+        DeviceName: '',
+        DeviceCode: '',
+        CardCode: ''
+      },
       useWaterInfo: [],
       deviceList: [],
       deviceNames: [],
@@ -165,6 +173,25 @@ export default {
       }
     }
   },
+  computed: {
+    searchDate() {
+      if (this.formSearch.dataArr.length === 0) {
+        return (
+          '时间区间：2021年1月-' +
+          this.currentYear +
+          '年' +
+          this.currentMonth +
+          '月'
+        )
+      } else {
+        return (
+          getYMDHMS(this.formSearch.dataArr[0]) +
+          '-' +
+          getYMDHMS(this.formSearch.dataArr[1])
+        )
+      }
+    }
+  },
   created() {
     this.deviceList = this.$store.getters.getWellList
   },
@@ -173,67 +200,91 @@ export default {
   },
   methods: {
     async getUseWaterInfo() {
-      const { data: res } = await this.$http.post(
-        '/api/useWaterInfo',
-        this.formSearch
-      )
+      const { data: res } = await this.$http.get('/api/useWaterInfo')
       if (res.meta.status !== 200) return this.$message.error(res.meta.msg)
       this.useWaterInfo = res.data.userWaterDetailList
-      this.pagination.total = res.data.total
+      this.pagination.total = res.data.item
+      this.totalUsage = res.data.totalUsage
       this.exportJson.data = res.data.userWaterDetailList
-
-      this.deviceNames = getDeviceNames(this.deviceList, this.useWaterInfo)
+      this.deviceNames = getDeviceNames(
+        this.deviceList,
+        this.useWaterInfo,
+        'DeviceName'
+      )
     },
     async handlePageChange(pageNum) {
       this.formSearch.pageNum = pageNum
       const { data: res } = await this.$http.post(
-        '/api/useWaterInfoPerPage',
+        '/api/useWaterInfoSearch',
         this.formSearch
       )
       if (res.meta.status !== 200) return this.$message.error(res.meta.msg)
       this.useWaterInfo = res.data
       this.exportJson.data = res.data
-      this.deviceNames = getDeviceNames(this.deviceList, this.useWaterInfo)
+      this.deviceNames = getDeviceNames(
+        this.deviceList,
+        this.useWaterInfo,
+        'DeviceName'
+      )
     },
-    handleInputFocus(key) {
+    handleInputKeyIn(key) {
       switch (key) {
         case 'DeviceCode':
           this.formSearch.CardCode = ''
+          this.formSearch.DeviceName = ''
+          this.formSearch.searchType = key
           break
         case 'CardCode':
           this.formSearch.DeviceCode = ''
+          this.formSearch.DeviceName = ''
+          this.formSearch.searchType = key
+          break
+        case 'DeviceName':
+          this.formSearch.DeviceCode = ''
+          this.formSearch.CardCode = ''
+          this.formSearch.searchType = key
           break
       }
     },
-    handleInput() {
-      if (
-        this.formSearch.DeviceCode.trim() === '' &&
-        this.formSearch.CardCode.trim() === ''
-      ) {
-        this.getUseWaterInfo()
-      }
-    },
     async handleSearch() {
+      //convert DeviceName back to search by DeviceCode
+      this.pageNum = 1
+      let deviceCodeArr = []
+      if (this.formSearch.DeviceName !== '') {
+        deviceCodeArr.push(this.formSearch)
+        deviceCodeArr = getDeviceNames(
+          this.deviceList,
+          deviceCodeArr,
+          'DeviceCode'
+        )
+        this.formSearch.searchType = 'DeviceCode'
+        this.formSearch.DeviceCode = deviceCodeArr[0]
+      }
       this.formSearch.pageNum = this.pagination.pageNum
       const { data: res } = await this.$http.post(
-        '/api/useWaterInfo',
+        '/api/useWaterInfoSearch',
         this.formSearch
       )
       if (res.meta.status !== 200) return this.$message.error(res.meta.msg)
-      this.useWaterInfo = res.data.userWaterDetailList
-      this.pagination.total = res.data.total
-      this.exportJson.data = res.data.userWaterDetailList
+      console.log(res.data)
+      this.useWaterInfo = res.data
+      this.pagination.total = res.data[1].item
+      this.exportJson.data = res.data
+      this.totalUsage = res.data[1].totalUsage
+      this.deviceNames = getDeviceNames(
+        this.deviceList,
+        this.useWaterInfo,
+        'DeviceName'
+      )
     },
     handleReset() {
-      this.formSearch.CardCode = ''
-      this.formSearch.DeviceCode = ''
-      this.getUseWaterInfo()
+      this.$refs.formSearch.resetFields()
       this.pagination.pageNum = 1
+      this.getUseWaterInfo()
     }
   }
 }
 </script>
-
 <style lang="less" scoped>
 .card-header {
   display: flex;

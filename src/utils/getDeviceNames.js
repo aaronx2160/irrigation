@@ -1,12 +1,23 @@
-const getDeviceNames = (deviceArr, idArr) => {
+const getDeviceNames = (deviceArr, idArr, colName) => {
   const deviceNameArr = []
-  for (let i = 0; i < idArr.length; i++) {
-    deviceArr.map(v => {
-      if (v.DeviceCode === idArr[i].DeviceCode) {
-        deviceNameArr.push(v.DeviceName)
-      }
-    })
+  if (colName === 'DeviceName') {
+    for (let i = 0; i < idArr.length; i++) {
+      deviceArr.map(v => {
+        if (v.DeviceCode === idArr[i]['DeviceCode']) {
+          deviceNameArr.push(v[colName])
+        }
+      })
+    }
+  } else {
+    for (let i = 0; i < idArr.length; i++) {
+      deviceArr.map(v => {
+        if (v.DeviceName === idArr[i]['DeviceName']) {
+          deviceNameArr.push(v[colName])
+        }
+      })
+    }
   }
+
   return deviceNameArr
 }
 

@@ -178,7 +178,8 @@ export default {
 
       this.deviceNames = getDeviceNames(
         this.deviceInfo,
-        this.waterChargeInfoArr
+        this.waterChargeInfoArr,
+        'DeviceName'
       )
     }
   }
