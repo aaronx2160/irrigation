@@ -54,6 +54,7 @@ import LiveCams from './components/liveInfo/LiveCharts'
 import AddAWell from './components/settings/AddAWell'
 import AMap from './components/AMap'
 import Test from './components/Test'
+import DataDownload from "./components/statistic/DataDownload";
 
 Vue.use(Router)
 const router = new Router({
@@ -117,6 +118,10 @@ const router = new Router({
         {
           path: '/waterCardInfo/waterCardInfo.do',
           component: WaterCardInfo
+        },
+        {
+          path: '/dataDownload',
+          component: DataDownload
         },
         {
           path: '/device/realTimeAlarm.do',
