@@ -55,17 +55,6 @@
               @click="handleReset"
               >重置
             </el-button>
-
-            <download-excel
-              :data="exportJson.data"
-              :fields="exportJson.fields"
-              type="xls"
-              name="filename.xls"
-            >
-              <el-button type="warning" size="small" icon="el-icon-search"
-                >导出
-              </el-button>
-            </download-excel>
           </el-form>
         </template>
       </div>
@@ -115,13 +104,13 @@
       >
       </el-pagination>
     </el-card>
-    <el-dialog
-      title="机井用水图表"
-      :visible.sync="UsageDialogVisible"
-      width="80%"
-    >
+    <el-dialog :visible.sync="UsageDialogVisible" width="60%">
+      <WaterUsageBarChart></WaterUsageBarChart>
       <span slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="UsageDialogVisible = false"
+        <el-button
+          type="primary"
+          size="mini"
+          @click="UsageDialogVisible = false"
           >确 定</el-button
         >
       </span>
@@ -132,7 +121,9 @@
 <script>
 import getDeviceNames from '../../utils/getDeviceNames'
 import getYMDHMS from '../../utils/time'
+import WaterUsageBarChart from '@/components/charts/WaterUsageBarChart'
 export default {
+  components: { WaterUsageBarChart },
   data() {
     return {
       totalUsage: 0,
@@ -150,28 +141,11 @@ export default {
       deviceNames: [],
       value: '',
       UsageDialogVisible: false,
-      pagination: { total: 0, pageNum: 0 },
-      exportJson: {
-        fields: {
-          机井编码: 'DeviceCode',
-          机井名称: 'DeviceCode',
-          水卡卡号: 'CardCode',
-          已用水量: 'UseWater',
-          剩余水量: 'RemainWater',
-          开泵时间: 'OpenPumpTime',
-          关泵时间: 'StopPumpTime'
-        },
-        data: [],
-        meta: [
-          [
-            {
-              key: 'charset',
-              value: 'utf-8'
-            }
-          ]
-        ]
-      }
+      pagination: { total: 0, pageNum: 0 }
     }
+  },
+  comments: {
+    WaterUsageBarChart
   },
   computed: {
     searchDate() {
@@ -269,7 +243,6 @@ export default {
       console.log(res.data)
       this.useWaterInfo = res.data
       this.pagination.total = res.data[1].item
-      this.exportJson.data = res.data
       this.totalUsage = res.data[1].totalUsage
       this.deviceNames = getDeviceNames(
         this.deviceList,

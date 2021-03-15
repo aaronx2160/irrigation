@@ -54,7 +54,7 @@ import LiveCams from './components/liveInfo/LiveCharts'
 import AddAWell from './components/settings/AddAWell'
 import AMap from './components/AMap'
 import Test from './components/Test'
-import DataDownload from "./components/statistic/DataDownload";
+import DataDownload from './components/statistic/DataDownload'
 
 Vue.use(Router)
 const router = new Router({
