@@ -7,20 +7,40 @@
     </el-breadcrumb>
     <el-card>
       <div slot="header" class="card-header">
-        <el-form label-width="100px">
-          <el-form-item label="用户名:" prop="roleName">
-            <el-input size="mini"></el-input>
+        <el-form label-width="100px" :model="searchForm" ref="search_form">
+          <el-form-item label="用户名:" prop="OwnerName">
+            <el-input
+              v-model.trim="searchForm.OwnerName"
+              @input="handleKeyIn('OwnerName')"
+              size="mini"
+            ></el-input>
           </el-form-item>
-          <el-form-item label="卡号:" prop="roleName">
-            <el-input size="mini"></el-input>
+          <el-form-item label="卡号:" prop="CardCode">
+            <el-input
+              v-model.trim="searchForm.CardCode"
+              @input="handleKeyIn('CardCode')"
+              size="mini"
+            ></el-input>
           </el-form-item>
-          <el-form-item label="电话号码:" prop="roleName">
-            <el-input size="mini"></el-input>
+          <el-form-item label="电话号码:" prop="OwnerTelphone">
+            <el-input
+              v-model.trim="searchForm.OwnerTelphone"
+              @input="handleKeyIn('OwnerTelphone')"
+              size="mini"
+            ></el-input>
           </el-form-item>
-          <el-button type="success" icon="el-icon-search" size="mini"
+          <el-button
+            type="success"
+            icon="el-icon-search"
+            size="mini"
+            @click="handleSearch"
             >查询</el-button
           >
-          <el-button type="info" icon="el-icon-eleme" size="mini"
+          <el-button
+            type="info"
+            icon="el-icon-eleme"
+            size="mini"
+            @click="handleSearchReset"
             >重置</el-button
           >
         </el-form>
@@ -62,6 +82,8 @@
                   type="danger"
                   circle
                   icon="el-icon-delete"
+                  size="mini"
+                  @click="handleDelete(item.Id)"
                 ></el-button>
               </td>
             </tr>
@@ -71,7 +93,7 @@
 
       <el-pagination
         layout="prev, pager, next"
-        :total="cardInfo.length"
+        :total="filterOn ? dataFiltered.length : cardInfo.length"
         @current-change="handlePageChange"
       >
       </el-pagination>
@@ -81,6 +103,7 @@
 
 <script>
 import pageNation from '@/utils/pagenation'
+
 export default {
   name: 'WaterCardInfo',
   data() {
@@ -88,7 +111,11 @@ export default {
       deviceList: null,
       cardInfo: null,
       pageNum: 1,
-      pageData: []
+      pageData: [],
+      searchForm: { OwnerName: '', CardCode: '', OwnerTelphone: '' },
+      dataFiltered: null,
+      filterOn: false,
+      searchType: ''
     }
   },
   mounted() {
@@ -105,12 +132,55 @@ export default {
         this.$message.error('获取水卡信息失败')
       } else {
         this.cardInfo = res.data
-        console.log(res.data)
         this.pageData = pageNation(this.cardInfo, this.pageNum, 10).newArr
       }
     },
     handlePageChange(pageNum) {
-      this.pageData = pageNation(this.cardInfo, pageNum, 10).newArr
+      const dataToPagenate = this.filterOn ? this.dataFiltered : this.cardInfo
+      this.pageData = pageNation(dataToPagenate, pageNum, 10).newArr
+    },
+    handleKeyIn(key) {
+      this.searchType = key
+      const searchFormKeyArr = Object.keys(this.searchForm)
+      for (let i = 0; i < searchFormKeyArr.length; i++) {
+        if (searchFormKeyArr[i] !== key)
+          this.searchForm[searchFormKeyArr[i]] = ''
+      }
+    },
+    handleSearch() {
+      this.filterOn = true
+      this.dataFiltered = this.cardInfo.filter(item => {
+        return item[this.searchType] === this.searchForm[this.searchType]
+      })
+      this.handlePageChange(1)
+    },
+    handleSearchReset() {
+      this.filterOn = false
+      this.$refs.search_form.resetFields()
+      this.getData()
+    },
+    async handleDelete(id) {
+      this.$confirm('此操作将永久删除该水卡, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      })
+        .then(async action => {
+          if (action === 'confirm') {
+            const { data: res } = await this.$http.delete(
+              '/api/waterCard/' + id
+            )
+            if (res.meta.status !== 200) {
+              this.$message.error('删除失败。')
+            } else {
+              this.$message.success('删除成功！')
+              await this.getData()
+            }
+          }
+        })
+        .catch(err => {
+          if (err) return this.$message.info('取消删除。')
+        })
     }
   }
 }

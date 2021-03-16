@@ -10,12 +10,23 @@
         <template>
           <el-form label-width="auto">
             <el-form-item label="机井名称:" prop="roleName">
-              <el-input></el-input>
+              <el-input size="mini"></el-input>
             </el-form-item>
             <el-form-item label="水卡卡号:" prop="roleName">
-              <el-input></el-input>
+              <el-input size="mini"></el-input>
             </el-form-item>
             <el-form-item label="起始时间:">
+              <el-select v-model="value" placeholder="请选择" size="mini">
+                <el-option
+                  v-for="item in options"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                >
+                </el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="结束时间:" size="mini">
               <el-select v-model="value" placeholder="请选择">
                 <el-option
                   v-for="item in options"
@@ -26,24 +37,13 @@
                 </el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="结束时间:">
-              <el-select v-model="value" placeholder="请选择">
-                <el-option
-                  v-for="item in options"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
-                >
-                </el-option>
-              </el-select>
-            </el-form-item>
-            <el-button type="success" size="small" icon="el-icon-search"
+            <el-button type="success" icon="el-icon-search" size="mini"
               >查询
             </el-button>
-            <el-button type="info" size="small" icon="el-icon-eleme"
+            <el-button type="info" icon="el-icon-eleme" size="mini"
               >重置
             </el-button>
-            <el-button type="warning" size="small" icon="el-icon-search"
+            <el-button type="warning" icon="el-icon-search" size="mini"
               >导出
             </el-button>
           </el-form>
@@ -59,28 +59,34 @@
               <th>水卡类型</th>
               <th>水卡操作类型</th>
               <th>水卡操作记录</th>
-              <th>所属行政区域</th>
-              <th>所属水管区域</th>
+              <!--              <th>所属行政区域</th>-->
+              <!--              <th>所属水管区域</th>-->
               <th>操作员</th>
               <th>操作时间</th>
             </tr>
           </thead>
           <tbody>
-            <tr v-for="(item, index) in waterChargeInfoArr" :key="item.Id">
+            <tr v-for="item in pageData" :key="item.Id">
               <td>{{ item.DeviceCode }}</td>
-              <td>{{ deviceNames[index] }}</td>
+              <td>{{ item.DeviceName }}</td>
               <td>{{ item.CardCode }}</td>
               <td>{{ item.CardType }}</td>
               <td>充值</td>
               <td>{{ item.OperateDetail }}</td>
-              <td>所属行政区域</td>
-              <td>所属水管区域</td>
+              <!--              <td>所属行政区域</td>-->
+              <!--              <td>所属水管区域</td>-->
               <td>{{ item.Operator }}</td>
               <td>{{ item.CreateTime }}</td>
             </tr>
           </tbody>
         </v-simple-table>
       </div>
+      <el-pagination
+        layout="prev, pager, next"
+        :total="waterChargeInfoArr.length"
+        @current-change="handlePage"
+      >
+      </el-pagination>
     </el-card>
     <el-dialog
       title="机井用水图表"
@@ -125,12 +131,13 @@
 
 <script>
 import getDeviceNames from '../../utils/getDeviceNames'
+import pageNation from '@/utils/pagenation'
 export default {
   data() {
     return {
-      deviceInfo: null,
-      waterChargeInfoArr: null,
-      deviceNames: null,
+      deviceInfo: [],
+      waterChargeInfoArr: [],
+      deviceNames: [],
       options: [
         {
           value: '2020',
@@ -158,7 +165,11 @@ export default {
         }
       ],
       value: '',
-      UsageDialogVisible: false
+      UsageDialogVisible: false,
+      pageNum: 1,
+      pageData: null,
+      filterOn: false,
+      filteredData: null
     }
   },
   mounted() {
@@ -174,13 +185,23 @@ export default {
       const { data: res } = await this.$http.post('/api/rptcardoperatedetail', {
         deviceId
       })
-      this.waterChargeInfoArr = res.data
-
-      this.deviceNames = getDeviceNames(
-        this.deviceInfo,
-        this.waterChargeInfoArr,
-        'DeviceName'
-      )
+      if (res.meta.status !== 200) {
+        this.$message.error('获取售水信息失败')
+      } else {
+        this.deviceNames = getDeviceNames(
+          this.deviceInfo,
+          res.data,
+          'DeviceName'
+        )
+        res.data.map((item, index) => {
+          item.DeviceName = this.deviceNames[index]
+          this.waterChargeInfoArr.push(item)
+        })
+        this.handlePage(this.pageNum)
+      }
+    },
+    handlePage(pageNum) {
+      this.pageData = pageNation(this.waterChargeInfoArr, pageNum, 10).newArr
     }
   }
 }
