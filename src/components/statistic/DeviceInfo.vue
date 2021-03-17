@@ -27,6 +27,7 @@
             size="mini"
             icon="el-icon-search"
             @click="handleSearch"
+            :disabled="this.$store.getters.getDisabled"
             >查询</el-button
           >
           <el-button
@@ -292,6 +293,7 @@
 
 <script>
 import pageNation from '../../utils/pagenation'
+import { GETDISABLED } from '@/store/types'
 export default {
   data() {
     return {
@@ -331,6 +333,7 @@ export default {
         : (this.searchBy.DeviceName = '')
     },
     handleSearch() {
+      this.$store.dispatch(GETDISABLED)
       if (this.searchBy.DeviceCode === '' && this.searchBy.DeviceName === '')
         return
       this.filterOn = true

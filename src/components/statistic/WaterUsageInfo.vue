@@ -46,6 +46,7 @@
               size="small"
               icon="el-icon-search"
               @click="handleSearch"
+              :disabled="this.$store.getters.getDisabled"
               >查询
             </el-button>
             <el-button
@@ -122,6 +123,7 @@
 import getDeviceNames from '../../utils/getDeviceNames'
 import getYMDHMS from '../../utils/time'
 import WaterUsageBarChart from '@/components/charts/WaterUsageBarChart'
+import { GETDISABLED } from '@/store/types'
 export default {
   components: { WaterUsageBarChart },
   data() {
@@ -221,6 +223,7 @@ export default {
       }
     },
     async handleSearch() {
+      await this.$store.dispatch(GETDISABLED)
       //convert DeviceName back to search by DeviceCode
       this.pageNum = 1
       let deviceCodeArr = []

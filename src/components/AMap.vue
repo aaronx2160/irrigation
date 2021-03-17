@@ -1,10 +1,33 @@
 <template>
   <div class="map_container">
     <div id="AMap" ref="map_ref"></div>
+    <div class="device_list">
+      <v-card class="mx-auto card" max-width="300" tile>
+        <v-list dense class="list">
+          <v-subheader class="list-header">
+            <h6>机井列表</h6>
+            <span class="iconfont icon-left" @click="handlePage(-1)"></span>
+            <span class="iconfont icon-right" @click="handlePage(1)"></span>
+          </v-subheader>
+          <v-list-item-group v-model="selectedItem" color="primary">
+            <v-list-item
+              class="list-item"
+              v-for="item in pageData"
+              :key="item.Id"
+              @click="handleDeviceClick(item)"
+            >
+              <v-list-item-title v-text="item.DeviceName"></v-list-item-title>
+              <span class="iconfont icon-chizi"></span>
+            </v-list-item>
+          </v-list-item-group>
+        </v-list>
+      </v-card>
+    </div>
   </div>
 </template>
 
 <script>
+import pageNation from '@/utils/pagenation'
 export default {
   name: 'AMap',
   data() {
@@ -15,7 +38,10 @@ export default {
       zoom: 12,
       wellList: null,
       markers: [],
-      cluster: []
+      cluster: [],
+      selectedItem: 1,
+      pageData: [],
+      pageNum: 1
     }
   },
   created() {
@@ -23,6 +49,7 @@ export default {
   },
   mounted() {
     this.init()
+    this.handlePage(0)
     this.geoLocate()
     this.addMarker()
     this.markers.forEach(v => {
@@ -158,6 +185,78 @@ export default {
 
       infoWindow.open(that.mapInstance, [wellData.Longitude, wellData.Latitude])
       that.mapInstance.setCenter([wellData.Longitude, wellData.Latitude])
+    },
+    openInfoWindow2(v) {
+      const wellData = v
+      let that = this
+      const info = `
+<div style="border-radius: 10px; background: #ffffff; width: 450px;" >
+<h1 style="color: white; background:#53b09a; margin: 0; padding: 5px;">${wellData.DeviceName +
+        '详细信息'}</h1>
+<table border="1px" style="border-collapse:collapse; text-align: center;" id="infoWin">
+<tbody>
+<tr>
+<th style="background: #cccccc;">机井设备名称：</th>
+<td>${wellData.DeviceName}
+</td>
+<th style="background: #cccccc;">采集时间:</th>
+<td>${wellData.CollectTime === null ? '无' : wellData.CollectTime}
+</td>
+</tr>
+<tr>
+<th style="background: #cccccc;">当前用水量(m³)：</th><td>${
+        wellData.UseWater
+      }</td><th style="background: #cccccc;">剩余水量(m³)：</th><td>${
+        wellData.RemainWater
+      }</td>
+</tr>
+<tr>
+<th style="background: #cccccc;">网络状态：</th><td>${
+        wellData.NetState === 1 ? '在线' : '下线'
+      }</td><th style="background: #cccccc;">上卡状态：</th><td>${
+        wellData.CardState === 1 ? '上卡' : '下卡'
+      }</td>
+</tr>
+<tr>
+<th style="background: #cccccc;">设备版本：</th><td>${
+        wellData.DeviceModel
+      }</td><th style="background: #cccccc;">报警状态：</th><td>${
+        wellData.AlarmState === 1 ? '有报警' : '无报警'
+      }</td>
+</tr>
+<tr>
+<th style="background: #cccccc;">箱门状态：</th><td>${
+        wellData.DoorState === 1 ? '开启' : '关闭'
+      }</td><th style="background: #cccccc;">水泵状态：</th><td>${
+        wellData.PumpState === 1 ? '开启' : '关闭'
+      }</td>
+</tr>
+<tr>
+<th style="background: #cccccc;">安装前现场照片：</th><td><a href="">预览</a></td><th style="background: #cccccc;">安装后现场照片：</th><td><a href="">预览</a></td>
+</tr>
+</tbody>
+</table>
+</div>`
+
+      const infoWindow = new that.$AMap.InfoWindow({
+        content: info //使用默认信息窗体框样式，显示信息内容
+      })
+
+      infoWindow.open(that.mapInstance, [wellData.Longitude, wellData.Latitude])
+      that.mapInstance.setCenter([wellData.Longitude, wellData.Latitude])
+    },
+    handlePage(flag) {
+      const totalPage = Math.ceil(this.wellList.length / 10)
+      this.pageNum += flag
+      if (this.pageNum < 1) {
+        this.pageNum = totalPage
+      } else if (this.pageNum > totalPage) {
+        this.pageNum = 1
+      }
+      this.pageData = pageNation(this.wellList, this.pageNum, 10).newArr
+    },
+    handleDeviceClick(device) {
+      this.openInfoWindow2(device)
     }
   }
 }
@@ -167,9 +266,35 @@ export default {
 .map_container {
   height: 100%;
   width: 100%;
+  position: relative;
   #AMap {
     height: 100%;
     width: 100%;
+  }
+  .device_list {
+    position: absolute;
+    border: #fff 1px solid;
+    border-radius: 5px;
+    top: 2%;
+    left: 87%;
+    background-color: rgba(255, 255, 255, 0.3);
+    width: 10%;
+    .card {
+      background-color: rgba(255, 255, 255, 0.3);
+      .list {
+        background-color: rgba(255, 255, 255, 0.3);
+        .list-header {
+          display: flex;
+          justify-content: space-evenly;
+          span {
+            cursor: pointer;
+          }
+          span:active {
+            color: #0077aa;
+          }
+        }
+      }
+    }
   }
 }
 </style>

@@ -60,6 +60,7 @@
             size="mini"
             icon="el-icon-search"
             @click="handleInputSearch"
+            :disabled="this.$store.getters.getDisabled"
             >查询</el-button
           >
           <el-button
@@ -427,7 +428,7 @@
 
 <script>
 import pageNation from '../../utils/pagenation'
-import { GETLIVEDATALIST } from '../../store/types'
+import { GETDISABLED, GETLIVEDATALIST } from '@/store/types'
 
 export default {
   name: 'liveData',
@@ -473,7 +474,6 @@ export default {
     this.$store.dispatch(GETLIVEDATALIST).then(() => {
       this.wellList = this.$store.getters.getLiveData
       this.handlePageChange(this.pageNum)
-      console.log(this.wellList)
     })
   },
   methods: {
@@ -508,6 +508,7 @@ export default {
       }
     },
     handleInputSearch() {
+      this.$store.dispatch(GETDISABLED)
       if (
         this.searchBy.DeviceCode.trim() === '' &&
         this.searchBy.DeviceName.trim() === ''

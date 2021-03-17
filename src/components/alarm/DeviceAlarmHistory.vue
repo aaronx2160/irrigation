@@ -60,12 +60,29 @@
         </el-form>
       </div>
       <div>
-        <el-table style="width: 100%;" border stripe>
-          <el-table-column label="设备编码" align="center"> </el-table-column>
-          <el-table-column label="警报详情" align="center"> </el-table-column>
-          <el-table-column label="警报时间" align="center"> </el-table-column>
-        </el-table>
+        <v-simple-table>
+          <thead>
+            <tr>
+              <th>设备编码</th>
+              <th>警报详情</th>
+              <th>警报时间</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="item in allData" :key="item.Id">
+              <td>{{ item.DeviceCode }}</td>
+              <td>{{ item.AlarmDetail }}</td>
+              <td>{{ item.AlarmTime }}</td>
+            </tr>
+          </tbody>
+        </v-simple-table>
       </div>
+      <el-pagination
+        layout="prev, pager, next"
+        :total="allData[0].total"
+        @current-change="handlePage"
+      >
+      </el-pagination>
     </el-card>
     <el-dialog title="报警图表" :visible.sync="alarmDialogVisible" width="80%">
       <template>
@@ -106,6 +123,8 @@
 >
 
 <script>
+import http from '@/utils/http'
+
 export default {
   data() {
     return {
@@ -163,7 +182,21 @@ export default {
       ],
       value: '',
       value2: '',
-      alarmDialogVisible: false
+      alarmDialogVisible: false,
+      allData: [0]
+    }
+  },
+  mounted() {
+    this.getData()
+  },
+  methods: {
+    async getData() {
+      this.allData = await http('get', '/api/alarmdevicedefault', null)
+    },
+    async handlePage(pageNum) {
+      this.allData = await http('post', '/api/alarmdevicedefault', {
+        pageNum: pageNum
+      })
     }
   }
 }

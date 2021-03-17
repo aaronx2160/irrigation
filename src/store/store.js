@@ -5,6 +5,7 @@ import axios from 'axios'
 import {
   CHANGEUSR,
   GETAREAS,
+  GETDISABLED,
   GETLIVEDATALIST,
   GETMENULIST,
   GETROLELIST,
@@ -24,7 +25,8 @@ export default new Vuex.Store({
     menuList: [],
     roleList: [],
     wellList: [],
-    waterAreas: []
+    waterAreas: [],
+    disabled: false
   },
   getters: {
     getUser(state) {
@@ -47,6 +49,9 @@ export default new Vuex.Store({
     },
     getWaterAreas(state) {
       return state.waterAreas
+    },
+    getDisabled(state) {
+      return state.disabled
     }
   },
   mutations: {
@@ -71,6 +76,9 @@ export default new Vuex.Store({
     },
     [GETWATERAREAS](state, waterAreas) {
       state.waterAreas = waterAreas
+    },
+    [GETDISABLED](state, disabled) {
+      state.disabled = disabled
     }
   },
   actions: {
@@ -123,6 +131,12 @@ export default new Vuex.Store({
       } else {
         return context.commit(GETWATERAREAS, res.data)
       }
+    },
+    getDisabled(context) {
+      context.commit(GETDISABLED, true)
+      setTimeout(() => {
+        context.commit(GETDISABLED, false)
+      }, 5000)
     }
   }
 })

@@ -47,10 +47,13 @@
           type="xls"
           name="filename.xls"
           :fetch="getDataSubmit"
-          :before-generate="startDownload"
           :before-finish="finishDownload"
         >
-          <el-button type="success" size="mini" icon="el-icon-search"
+          <el-button
+            type="success"
+            size="mini"
+            icon="el-icon-search"
+            :disabled="this.$store.getters.getDisabled"
             >下载
           </el-button>
         </download-excel>
@@ -62,6 +65,7 @@
 
 <script>
 import getDeviceNames from '../../utils/getDeviceNames'
+import { GETDISABLED } from '@/store/types'
 export default {
   name: 'DataDownload',
   data() {
@@ -110,6 +114,7 @@ export default {
       }
     },
     async getDataSubmit() {
+      await this.$store.dispatch(GETDISABLED)
       if (
         this.getDataForm.searchType === '' &&
         this.getDataForm.dataRange.length === 0

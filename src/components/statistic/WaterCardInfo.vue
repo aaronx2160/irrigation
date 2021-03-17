@@ -34,6 +34,7 @@
             icon="el-icon-search"
             size="mini"
             @click="handleSearch"
+            :disabled="this.$store.getters.getDisabled"
             >查询</el-button
           >
           <el-button
@@ -103,6 +104,7 @@
 
 <script>
 import pageNation from '@/utils/pagenation'
+import { GETDISABLED } from '@/store/types'
 
 export default {
   name: 'WaterCardInfo',
@@ -148,6 +150,7 @@ export default {
       }
     },
     handleSearch() {
+      this.$store.dispatch(GETDISABLED)
       this.filterOn = true
       this.dataFiltered = this.cardInfo.filter(item => {
         return item[this.searchType] === this.searchForm[this.searchType]

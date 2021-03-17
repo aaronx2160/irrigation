@@ -63,6 +63,7 @@
             size="mini"
             icon="el-icon-search"
             @click="handleInputSearch"
+            :disabled="this.$store.getters.getDisabled"
             >查询</el-button
           >
           <el-button
@@ -139,6 +140,7 @@
 
 <script>
 import pageNation from '../../utils/pagenation'
+import { GETDISABLED } from '@/store/types'
 export default {
   data() {
     return {
@@ -197,6 +199,7 @@ export default {
         : (this.searchBy.DeviceName = '')
     },
     handleInputSearch() {
+      this.$store.dispatch(GETDISABLED)
       const { DeviceCode, DeviceName } = this.searchBy
       if (DeviceCode === '' && DeviceName === '') return
       this.pageData = this.waterPlan.filter(item => {
