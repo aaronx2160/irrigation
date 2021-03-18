@@ -146,9 +146,6 @@ export default {
       pagination: { total: 0, pageNum: 0 }
     }
   },
-  comments: {
-    WaterUsageBarChart
-  },
   computed: {
     searchDate() {
       if (this.formSearch.dataArr.length === 0) {
@@ -181,7 +178,6 @@ export default {
       this.useWaterInfo = res.data.userWaterDetailList
       this.pagination.total = res.data.item
       this.totalUsage = res.data.totalUsage
-      this.exportJson.data = res.data.userWaterDetailList
       this.deviceNames = getDeviceNames(
         this.deviceList,
         this.useWaterInfo,
@@ -196,7 +192,6 @@ export default {
       )
       if (res.meta.status !== 200) return this.$message.error(res.meta.msg)
       this.useWaterInfo = res.data
-      this.exportJson.data = res.data
       this.deviceNames = getDeviceNames(
         this.deviceList,
         this.useWaterInfo,
@@ -204,23 +199,13 @@ export default {
       )
     },
     handleInputKeyIn(key) {
-      switch (key) {
-        case 'DeviceCode':
-          this.formSearch.CardCode = ''
-          this.formSearch.DeviceName = ''
-          this.formSearch.searchType = key
-          break
-        case 'CardCode':
-          this.formSearch.DeviceCode = ''
-          this.formSearch.DeviceName = ''
-          this.formSearch.searchType = key
-          break
-        case 'DeviceName':
-          this.formSearch.DeviceCode = ''
-          this.formSearch.CardCode = ''
-          this.formSearch.searchType = key
-          break
+      const keys = Object.keys(this.formSearch)
+      for (let i = 0; i < keys.length; i++) {
+        if (keys[i] !== key && keys[i] !== 'dataArr') {
+          this.formSearch[keys[i]] = ''
+        }
       }
+      this.formSearch.searchType = key
     },
     async handleSearch() {
       await this.$store.dispatch(GETDISABLED)
@@ -242,8 +227,8 @@ export default {
         '/api/useWaterInfoSearch',
         this.formSearch
       )
-      if (res.meta.status !== 200) return this.$message.error(res.meta.msg)
-      console.log(res.data)
+      if (res.meta.status !== 200)
+        return this.$message.error(JSON.stringify(res.meta.msg))
       this.useWaterInfo = res.data
       this.pagination.total = res.data[1].item
       this.totalUsage = res.data[1].totalUsage

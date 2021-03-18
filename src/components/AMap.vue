@@ -17,7 +17,30 @@
               @click="handleDeviceClick(item)"
             >
               <v-list-item-title v-text="item.DeviceName"></v-list-item-title>
-              <span class="iconfont icon-chizi"></span>
+              <el-tooltip
+                class="item"
+                effect="light"
+                content="水泵开启"
+                placement="top-start"
+              >
+                <span
+                  v-show="item.PumpState === 1"
+                  class="iconfont icon-kaiqi"
+                  style="color: #67C23A"
+                ></span>
+              </el-tooltip>
+              <el-tooltip
+                class="item"
+                effect="light"
+                content="水泵关闭"
+                placement="top-start"
+              >
+                <span
+                  v-show="item.PumpState === 0"
+                  class="iconfont icon-guanbi"
+                  style="color: #F56C6C"
+                ></span>
+              </el-tooltip>
             </v-list-item>
           </v-list-item-group>
         </v-list>
@@ -246,6 +269,7 @@ export default {
       that.mapInstance.setCenter([wellData.Longitude, wellData.Latitude])
     },
     handlePage(flag) {
+      console.log(this.wellList)
       const totalPage = Math.ceil(this.wellList.length / 10)
       this.pageNum += flag
       if (this.pageNum < 1) {

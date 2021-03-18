@@ -150,6 +150,9 @@ export default {
       }
     },
     handleSearch() {
+      if (this.searchType === '') {
+        return this.$message.error('请输入筛选关键字')
+      }
       this.$store.dispatch(GETDISABLED)
       this.filterOn = true
       this.dataFiltered = this.cardInfo.filter(item => {

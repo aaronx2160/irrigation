@@ -10,14 +10,14 @@
         <el-form label-width="100px">
           <el-form-item label="机井名称:" prop="roleName">
             <el-input
-              v-model="searchBy.DeviceName"
+              v-model.trim="searchBy.DeviceName"
               size="mini"
               @input="handleSearchInput('DeviceName')"
             ></el-input>
           </el-form-item>
           <el-form-item label="机井编码:" prop="roleName">
             <el-input
-              v-model="searchBy.DeviceCode"
+              v-model.trim="searchBy.DeviceCode"
               size="mini"
               @input="handleSearchInput('DeviceCode')"
             ></el-input>
@@ -331,6 +331,10 @@ export default {
       flag === 'DeviceName'
         ? (this.searchBy.DeviceCode = '')
         : (this.searchBy.DeviceName = '')
+
+      if (this.searchBy.DeviceCode === '' && this.searchBy.DeviceName === '') {
+        this.handlePageChange(1)
+      }
     },
     handleSearch() {
       this.$store.dispatch(GETDISABLED)

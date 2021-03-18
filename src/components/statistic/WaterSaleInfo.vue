@@ -43,9 +43,6 @@
             <el-button type="info" icon="el-icon-eleme" size="mini"
               >重置
             </el-button>
-            <el-button type="warning" icon="el-icon-search" size="mini"
-              >导出
-            </el-button>
           </el-form>
         </template>
       </div>

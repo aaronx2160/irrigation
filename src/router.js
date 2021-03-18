@@ -55,6 +55,7 @@ import AddAWell from './components/settings/AddAWell'
 import AMap from './components/AMap'
 import Test from './components/Test'
 import DataDownload from './components/statistic/DataDownload'
+import RptChargedDetail from '@/components/statistic/RptChargedDetail'
 
 Vue.use(Router)
 const router = new Router({
@@ -122,6 +123,10 @@ const router = new Router({
         {
           path: '/dataDownload',
           component: DataDownload
+        },
+        {
+          path: '/wellsRechargeStatistics/wellsRecharge.do',
+          component: RptChargedDetail
         },
         {
           path: '/device/realTimeAlarm.do',

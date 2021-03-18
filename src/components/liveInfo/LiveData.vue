@@ -157,6 +157,7 @@
                       icon="el-icon-s-data"
                       @click="handleMoreInfoDialogOPen(item)"
                       circle
+                      size="mini"
                     ></el-button>
                   </el-tooltip>
                 </td>

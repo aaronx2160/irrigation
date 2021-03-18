@@ -1,29 +1,40 @@
 <template>
   <div>
-    <el-button @click="getData">getDeviceCode</el-button>
-    <el-button @click="handleClick">DeleteData</el-button>
+    <el-button @click="getData">Get Data</el-button>
+    <!--    <el-button @click="handleClick">DeleteData</el-button>-->
   </div>
 </template>
 
 <script>
+import http from '@/utils/http'
+
 export default {
   name: 'Test',
   data() {
-    return { wellList: null, deviceCode: [] }
+    return { menuList: [] }
   },
   methods: {
-    getData() {
-      this.wellList = this.$store.getters.getWellList
-
-      this.wellList.map(v => {
-        this.deviceCode.push(v.DeviceCode)
+    async getData() {
+      this.menuList = await http('get', '/api/menu/3', null)
+      console.log(this.menuList)
+      this.menuList.map(item => {
+        item.children = []
       })
-      console.log(this.deviceCode.length)
-      console.log(this.deviceCode)
-    },
-    async handleClick() {
-      const { data: res } = await this.$http.post('/api/test', this.deviceCode)
-      console.log(res)
+      const menuLevel = 3
+      let menuArr = []
+      for (let i = menuLevel; i > 1; i--) {
+        this.menuList.map(item => {
+          if (item.MenuLevel === i) {
+            let arr = this.menuList.filter(v => {
+              return v.MenuCode === item.ParentMenuId
+            })
+
+            arr[0]['children'].push(item)
+            menuArr.push(arr)
+          }
+        })
+      }
+      console.log(menuArr)
     }
   }
 }
