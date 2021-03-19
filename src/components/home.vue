@@ -39,7 +39,7 @@
         >
           <el-submenu
             :index="'/' + item2.MenuUrl"
-            v-for="item2 in dbMenuList"
+            v-for="item2 in menuListReduced"
             :key="item2.Id"
           >
             <template slot="title">
@@ -98,6 +98,7 @@
 
 <script>
 import { GETMENULIST, GETWELLLIST } from '../store/types'
+import http from '@/utils/http'
 
 export default {
   data() {
@@ -109,168 +110,8 @@ export default {
     }
     return {
       user: {},
-      dbMenuList: [],
-      menuList: [
-        {
-          id: 701,
-          authName: '系统管理',
-          path: 701,
-          children: [
-            {
-              id: 2001,
-              authName: '角色列表',
-              path: 'roles',
-              children: []
-            },
-            {
-              id: 7005,
-              authName: '权限列表',
-              path: 'rights',
-              children: []
-            },
-            {
-              id: 7008,
-              authName: '用户管理',
-              path: 'users',
-              children: []
-            },
-            {
-              id: 7001,
-              authName: '行政区域',
-              path: 'regions',
-              children: []
-            },
-            {
-              id: 7002,
-              authName: '水管区域',
-              path: 'waterAdmins',
-              children: []
-            },
-            {
-              id: 7003,
-              authName: '机井管理',
-              path: 'wellManagement',
-              children: []
-            },
-            {
-              id: 7006,
-              authName: '参数管理',
-              path: 'paraSettingsHome',
-              children: [
-                {
-                  id: 70061,
-                  authName: '水费管理',
-                  path: 'paraSettingsHome/waterFee',
-                  children: []
-                },
-                {
-                  id: 70062,
-                  authName: '水资源设置',
-                  path: 'paraSettingsHome/WaterResource',
-                  children: []
-                },
-                {
-                  id: 70063,
-                  authName: '计量水费设置',
-                  path: 'paraSettingsHome/WaterMeter',
-                  children: []
-                },
-                {
-                  id: 70064,
-                  authName: '三相电压',
-                  path: 'paraSettingsHome/ThreePhaseVoltage',
-                  children: []
-                },
-                {
-                  id: 70065,
-                  authName: '功率设置',
-                  path: 'paraSettingsHome/PowerSetting',
-                  children: []
-                },
-                {
-                  id: 70066,
-                  authName: '异常参数设置',
-                  path: 'paraSettingsHome/ExceptParams',
-                  children: []
-                }
-              ]
-            },
-            {
-              id: 7007,
-              authName: '基础信息',
-              path: 'basicInfoHome',
-              children: [
-                {
-                  id: 70072,
-                  authName: '运营商',
-                  path: 'basicInfoHome/Providers',
-                  children: []
-                },
-                {
-                  id: 70073,
-                  authName: '泵管材质',
-                  path: 'basicInfoHome/PumpPipeMaterial',
-                  children: []
-                },
-                {
-                  id: 70074,
-                  authName: '取水类型',
-                  path: 'basicInfoHome/WaterType',
-                  children: []
-                },
-                {
-                  id: 70075,
-                  authName: '应用状况',
-                  path: 'basicInfoHome/WellStatus',
-                  children: []
-                },
-                {
-                  id: 70076,
-                  authName: '水井用途',
-                  path: 'basicInfoHome/WellUse',
-                  children: []
-                },
-                {
-                  id: 70077,
-                  authName: '灌溉模式',
-                  path: 'basicInfoHome/IrrigationPattern',
-                  children: []
-                },
-                {
-                  id: 70078,
-                  authName: '灌区类型',
-                  path: 'basicInfoHome/IrrigationAreaType',
-                  children: []
-                },
-                {
-                  id: 70079,
-                  authName: '地貌类型',
-                  path: 'basicInfoHome/GeomorphicType',
-                  children: []
-                },
-                {
-                  id: 700710,
-                  authName: '计量设施类型',
-                  path: 'basicInfoHome/MeasureEquipmentType',
-                  children: []
-                },
-                {
-                  id: 700711,
-                  authName: '机井设备型号',
-                  path: 'basicInfoHome/WellEquipmentModel',
-                  children: []
-                },
-                {
-                  id: 70071,
-                  authName: '维修人员',
-                  path: 'basicInfoHome/MaintenanceStaff',
-                  children: []
-                }
-              ]
-            }
-          ]
-        }
-      ],
+      menuListReduced: [],
+      menuList: [],
       changPswdDialogVisible: false,
       pswdForm: {
         oldPswd: '',
@@ -335,41 +176,28 @@ export default {
     this.getMenuList()
     this.getDeviceList()
     this.activePath = window.sessionStorage.getItem('activePath')
-    const sysSettingMenuList = this.menuList.filter(item => {
-      return item.authName === '系统管理'
-    })
-
-    window.sessionStorage.setItem(
-      'paramsSettingMenuList',
-      JSON.stringify(sysSettingMenuList[0].children[6])
-    )
-    window.sessionStorage.setItem(
-      'basicInfoMenuList',
-      JSON.stringify(sysSettingMenuList[0].children[7])
-    )
   },
   methods: {
     async getMenuList() {
       const { rid } = this.user
-      const menuArr = []
-      const res = await this.$http.get(`/api/menu/${rid}`)
+      this.menuList = await http('get', `/api/menu/${rid}`, null)
+      const arrTemp = this.menuList.slice(0)
+      arrTemp.map(item => {
+        item.children = []
+      })
+      for (let i = 0; i < arrTemp.length; i++) {
+        arrTemp.map(item => {
+          if (arrTemp[i].ParentMenuId === item.MenuCode) {
+            item.children.push(arrTemp[i])
+          }
+        })
+        if (arrTemp[i].MenuLevel === 1) {
+          this.menuListReduced.push(arrTemp[i])
+        }
+      }
 
-      res.data.data.map(v => {
-        if (v.ParentMenuId === '') {
-          v.children = []
-          menuArr.push(v)
-        }
-      })
-      res.data.data.map(menuItem => {
-        const firstLevelMenuIndex = menuArr.indexOf(
-          menuArr.filter(v => v.Id === menuItem.ParentMenuId)[0]
-        )
-        if (firstLevelMenuIndex !== -1) {
-          menuArr[firstLevelMenuIndex].children.push(menuItem)
-        }
-      })
-      this.$store.commit(GETMENULIST, menuArr)
-      this.dbMenuList = this.$store.getters.getMenuList
+      this.$store.commit(GETMENULIST, this.menuListReduced)
+      this.menuListReduced = this.$store.getters.getMenuList
     },
     getDeviceList() {
       this.$store.dispatch(GETWELLLIST)

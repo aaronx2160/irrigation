@@ -16,25 +16,21 @@ export default {
   methods: {
     async getData() {
       this.menuList = await http('get', '/api/menu/3', null)
-      console.log(this.menuList)
-      this.menuList.map(item => {
+      const menuArr = []
+      const arrTemp = this.menuList.slice(0)
+      arrTemp.map(item => {
         item.children = []
       })
-      const menuLevel = 3
-      let menuArr = []
-      for (let i = menuLevel; i > 1; i--) {
-        this.menuList.map(item => {
-          if (item.MenuLevel === i) {
-            let arr = this.menuList.filter(v => {
-              return v.MenuCode === item.ParentMenuId
-            })
-
-            arr[0]['children'].push(item)
-            menuArr.push(arr)
+      for (let i = 0; i < arrTemp.length; i++) {
+        arrTemp.map(item => {
+          if (arrTemp[i].ParentMenuId === item.MenuCode) {
+            item.children.push(arrTemp[i])
           }
         })
+        if (arrTemp[i].MenuLevel === 1) {
+          menuArr.push(arrTemp[i])
+        }
       }
-      console.log(menuArr)
     }
   }
 }

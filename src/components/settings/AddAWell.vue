@@ -107,7 +107,7 @@
             <v-col cols="9" md="3">
               <v-select
                 v-model="extendedWellInfo.DeviceModel"
-                :items="deviceModel"
+                :items="deviceModel.DeviceModel"
                 label="设备型号"
                 dense
               ></v-select>
@@ -552,6 +552,7 @@
 
 <script>
 import { GETAREAS, GETWELLLIST } from '@/store/types'
+import http from '@/utils/http'
 
 export default {
   name: 'AddAWell',
@@ -657,13 +658,15 @@ export default {
   methods: {
     async getData() {
       //get area info
-      this.areas = this.$store.getters.getAreas
-      this.fetchAreaNames(this.areas, '88aaf98da88f45e799a357e7de58a69f')
-      this.areasL5 = this.areasL5[0]
-        .concat(this.areasL5[1])
-        .concat(this.areasL5[2])
+      // this.areas = this.$store.getters.getAreas
+      // this.fetchAreaNames(this.areas, '88aaf98da88f45e799a357e7de58a69f')
+      // this.areasL5 = this.areasL5[0]
+      //   .concat(this.areasL5[1])
+      //   .concat(this.areasL5[2])
       //设备型号
-      this.deviceModel = await this.getAddFormSelectOptions('deviceModel')
+      // this.deviceModel = await this.getAddFormSelectOptions('deviceModel')
+      this.deviceModel = await http('get', '/api/basicInfo/sysdevicemodel')
+      console.log(this.deviceModel)
       //泵管材质 pumpMaterial
       this.pumpMaterial = await this.getAddFormSelectOptions('pumpMaterial')
       //运营商

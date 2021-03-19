@@ -1,146 +1,161 @@
 <template>
-    <div class="wrapper">
-        <div slot="header" class="card-header">
-            <div class="header-btn">
-                <el-button
-                    type="success"
-                    icon="el-icon-circle-plus-outline"
-                    size="small"
-                    @click="addWellStatusVisible = true"
-                    >新增</el-button
-                >
-                <el-button
-                    type="danger"
-                    icon="el-icon-delete"
-                    size="small"
-                    @click="handleDeleteRegion"
-                    >删除</el-button
-                >
-            </div>
-        </div>
-        <div>
-            <template>
-                <el-table :data="formData" style="width: 100%;" border stripe>
-                    <el-table-column type="selection" align="center">
-                    </el-table-column>
-                    <el-table-column
-                        label="应用状况"
-                        prop="wellStatus"
-                        align="center"
-                    >
-                    </el-table-column>
-                    <el-table-column
-                        label="创建时间"
-                        prop="createdAt"
-                        align="center"
-                    >
-                    </el-table-column>
-                    <el-table-column
-                        label="修改时间"
-                        prop="editedAt"
-                        align="center"
-                    >
-                    </el-table-column>
-                    <el-table-column label="操作" prop="" align="center">
-                        <template>
-                            <el-button
-                                size="mini"
-                                type="warning"
-                                @click="addWellStatusVisible = true"
-                                >修改</el-button
-                            >
-                            <el-button
-                                size="mini"
-                                type="danger"
-                                @click="handleDeleteRegion"
-                                >删除</el-button
-                            >
-                        </template>
-                    </el-table-column>
-                </el-table>
+  <div class="wrapper">
+    <div slot="header" class="card-header">
+      <div class="header-btn">
+        <el-button
+          type="success"
+          icon="el-icon-circle-plus-outline"
+          size="small"
+          @click="addProviderVisible = true"
+          >新增</el-button
+        >
+      </div>
+    </div>
+    <div>
+      <template>
+        <el-table :data="formData" style="width: 100%;" border stripe>
+          <el-table-column label="应用状况" prop="ApplyStatus" align="center">
+          </el-table-column>
+          <el-table-column label="创建时间" prop="CreateTime" align="center">
+          </el-table-column>
+          <el-table-column label="修改时间" prop="EditTime" align="center">
+          </el-table-column>
+          <el-table-column label="操作" prop="" align="center">
+            <template slot-scope="scope">
+              <el-button
+                size="mini"
+                type="warning"
+                @click="handleEdit(scope.row)"
+                >修改</el-button
+              >
+              <el-button
+                size="mini"
+                type="danger"
+                @click="handleDelete(scope.row)"
+                >删除</el-button
+              >
             </template>
-        </div>
+          </el-table-column>
+        </el-table>
+      </template>
+    </div>
 
-        <el-dialog
-            title="新增"
-            :visible.sync="addWellStatusVisible"
-            width="30%"
-        >
-            <el-form ref="form" label-width="auto">
-                <el-form-item label="应用状况:">
-                    <el-input></el-input>
-                </el-form-item>
-            </el-form>
-            <span slot="footer" class="dialog-footer">
-                <el-button @click="addWellStatusVisible = false"
-                    >取 消</el-button
-                >
-                <el-button type="primary" @click="addWellStatusVisible = false"
-                    >确 定</el-button
-                >
-            </span>
-        </el-dialog>
-        <el-dialog
-            title="修改"
-            :visible.sync="editWellStatusVisible"
-            width="30%"
-        >
-            <el-form ref="form" label-width="auto">
-                <el-form-item label="应用状况:">
-                    <el-input></el-input>
-                </el-form-item>
-            </el-form>
+    <el-dialog
+      title="新增应用状况信息"
+      :visible.sync="addProviderVisible"
+      width="30%"
+    >
+      <el-form ref="form" label-width="auto">
+        <el-form-item label="应用状况:">
+          <el-input v-model.trim="ApplyStatusName" size="mini"></el-input>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="addProviderVisible = false">取 消</el-button>
+        <el-button type="primary" @click="handleAdd">确 定</el-button>
+      </span>
+    </el-dialog>
+    <el-dialog
+      title="编辑应用状况信息"
+      :visible.sync="editProviderVisible"
+      width="30%"
+    >
+      <el-form ref="form" label-width="auto">
+        <el-form-item label="应用状况:">
+          <el-input v-model.trim="ApplyStatusEdit.name" size="mini"></el-input>
+        </el-form-item>
+      </el-form>
 
-            <span slot="footer" class="dialog-footer">
-                <el-button @click="editWellStatusVisible = false"
-                    >取 消</el-button
-                >
-                <el-button type="primary" @click="editWellStatusVisible = false"
-                    >确 定</el-button
-                >
-            </span>
-        </el-dialog>
-    </div></template
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="editProviderVisible = false">取 消</el-button>
+        <el-button type="primary" @click="handleEditSubmit">确 定</el-button>
+      </span>
+    </el-dialog>
+  </div></template
 >
 
 <script>
+import http from '@/utils/http'
+
 export default {
-    data() {
-        return {
-            formData: [
-                {
-                    wellStatus: '正常使用',
-                    createdAt: '2016-10-17 15:36:14',
-                    editedAt: '2018-11-09 17:02:08',
-                },
-            ],
-            addWellStatusVisible: false,
-            editWellStatusVisible: false,
-        }
+  data() {
+    return {
+      formData: [],
+      ApplyStatusName: '',
+      colName: 'ApplyStatus',
+      type: 'sysapplystatus',
+      ApplyStatusEdit: { id: '', name: '' },
+      addProviderVisible: false,
+      editProviderVisible: false
+    }
+  },
+  mounted() {
+    this.getData()
+  },
+  methods: {
+    async getData() {
+      this.formData = await http('get', '/api/basicInfo/' + this.type)
     },
-    methods: {
-        handleDeleteRegion() {
-            this.$confirm('此操作将永久删除该区域, 是否继续?', '提示', {
-                confirmButtonText: '确定',
-                cancelButtonText: '取消',
-                type: 'warning',
-            })
-        },
+    handleAdd() {
+      this.addProviderVisible = true
+      if (!this.ApplyStatusName) {
+        this.$message.error('请输入应用状况名称！')
+        return
+      }
+      http('post', '/api/basicInfo', {
+        name: this.ApplyStatusName,
+        type: this.type,
+        colName: this.colName
+      }).then(() => {
+        this.$message.success('添加成功！')
+        this.addProviderVisible = false
+        this.getData()
+      })
     },
+    handleEdit(row) {
+      this.editProviderVisible = true
+      this.ApplyStatusEdit.id = row.Id
+      this.ApplyStatusEdit.name = row.ApplyStatus.slice(0)
+    },
+    handleEditSubmit() {
+      this.ApplyStatusEdit.type = this.type
+      this.ApplyStatusEdit.colName = this.colName
+      http('put', '/api/basicInfo', this.ApplyStatusEdit).then(() => {
+        this.$message.success('修改成功！')
+        this.editProviderVisible = false
+        this.getData()
+      })
+    },
+    handleDelete(row) {
+      this.$confirm('此操作将永久删除该应用状况, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        http('delete', '/api/basicInfo/' + this.type + '/' + row.Id).then(
+          () => {
+            this.$message.success('删除成功！')
+            this.getData()
+          }
+        )
+      })
+    }
+  }
 }
 </script>
 
 <style lang="less" scoped>
 .wrapper {
-    margin-top: 15px;
+  margin-top: 15px;
 }
 .card-header {
-    display: flex;
-    align-items: center;
-    justify-content: left;
+  display: flex;
+  align-items: center;
+  justify-content: left;
 }
+
 .el-form {
-    margin: 0 auto;
-    width: 200px;
+  margin: 0 auto;
+  width: 200px;
 }
 </style>

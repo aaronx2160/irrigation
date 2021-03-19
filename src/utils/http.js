@@ -12,7 +12,7 @@ const http = async (type, url, data) => {
       res = await axios.post(url, data)
       break
     case 'DELETE':
-      res = await axios.delete(url, data)
+      res = await axios.delete(url)
       break
     case 'PUT':
       res = await axios.put(url, data)
