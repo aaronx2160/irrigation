@@ -1,4 +1,4 @@
-const sum = arr => {
+const sum = (arr) => {
   console.log(arr)
 }
 

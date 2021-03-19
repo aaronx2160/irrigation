@@ -23,7 +23,7 @@ export default {
       seriesData: {},
       dataIndex: 0,
       tittleArr: ['网络', '水卡', '水泵'],
-      titleFontSize: 0
+      titleFontSize: 0,
     }
   },
   mounted() {
@@ -41,30 +41,30 @@ export default {
         title: {
           text: '| 机井状态',
           left: 20,
-          top: 20
+          top: 20,
         },
         legend: {
-          icon: 'circle'
+          icon: 'circle',
         },
         tooltip: {
-          show: true
+          show: true,
         },
         series: [
           {
             type: 'pie',
             label: {
-              show: true
+              show: true,
             },
             emphasis: {
               label: {
-                show: true
+                show: true,
               },
               labelLine: {
-                show: true
-              }
-            }
-          }
-        ]
+                show: true,
+              },
+            },
+          },
+        ],
       }
       this.chartInstance.setOption(initOption)
       this.chartInstance.resize()
@@ -72,7 +72,7 @@ export default {
     },
     getData() {
       this.allData = this.$store.getters.getLiveData
-      this.allData.map(v => {
+      this.allData.map((v) => {
         v.NetState = v.NetState === 1 ? '在线' : '离线'
         v.PumpState = v.PumpState === 1 ? '开启' : '关闭'
         v.CardState = v.CardState === 1 ? '上卡' : '下卡'
@@ -85,17 +85,17 @@ export default {
             name: '在线',
             value: 0,
             itemStyle: {
-              color: '#67C23A'
-            }
+              color: '#67C23A',
+            },
           },
           {
             name: '离线',
             value: 0,
             itemStyle: {
-              color: '#F56C6C'
-            }
-          }
-        ]
+              color: '#F56C6C',
+            },
+          },
+        ],
       }
       const cardData = {
         cardLegend: ['上卡', '下卡'],
@@ -104,17 +104,17 @@ export default {
             name: '上卡',
             value: 0,
             itemStyle: {
-              color: '#67C23A'
-            }
+              color: '#67C23A',
+            },
           },
           {
             name: '下卡',
             value: 0,
             itemStyle: {
-              color: '#F56C6C'
-            }
-          }
-        ]
+              color: '#F56C6C',
+            },
+          },
+        ],
       }
       const pumpData = {
         pumpLegend: ['开启', '关闭'],
@@ -123,19 +123,19 @@ export default {
             name: '开启',
             value: 0,
             itemStyle: {
-              color: '#67C23A'
-            }
+              color: '#67C23A',
+            },
           },
           {
             name: '关闭',
             value: 0,
             itemStyle: {
-              color: '#F56C6C'
-            }
-          }
-        ]
+              color: '#F56C6C',
+            },
+          },
+        ],
       }
-      this.allData.map(v => {
+      this.allData.map((v) => {
         v.NetState === '在线'
           ? netData.netArr[0].value++
           : netData.netArr[1].value++
@@ -165,12 +165,12 @@ export default {
       }
       const dataOption = {
         title: {
-          text: '| ' + this.tittleArr[dataIndex] + '状态'
+          text: '| ' + this.tittleArr[dataIndex] + '状态',
         },
         legend: {
-          data: legendData
+          data: legendData,
         },
-        series: [{ data: seriesData }]
+        series: [{ data: seriesData }],
       }
       this.chartInstance.setOption(dataOption)
     },
@@ -180,8 +180,8 @@ export default {
       const adaptOption = {
         title: {
           textStyle: {
-            fontSize: this.titleFontSize
-          }
+            fontSize: this.titleFontSize,
+          },
         },
         legend: {
           top: 35,
@@ -189,15 +189,15 @@ export default {
           itemHeight: this.titleFontSize,
           itemGap: this.titleFontSize / 2,
           textStyle: {
-            fontSize: this.titleFontSize
-          }
+            fontSize: this.titleFontSize,
+          },
         },
         series: [
           {
-            radius: this.titleFontSize * 7.5
+            radius: this.titleFontSize * 7.5,
             // center: ['50%', '50%'],
-          }
-        ]
+          },
+        ],
       }
       this.chartInstance.setOption(adaptOption)
       this.chartInstance.resize()
@@ -207,8 +207,8 @@ export default {
       if (this.dataIndex >= 3) this.dataIndex = 0
       if (this.dataIndex < 0) this.dataIndex = 2
       this.upDateChart(this.dataIndex)
-    }
-  }
+    },
+  },
 }
 </script>
 

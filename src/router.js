@@ -78,76 +78,76 @@ const router = new Router({
         { path: '/sysRole/index.do', component: Roles },
         {
           path: '/waterRightManage/farming.do',
-          component: AgriUsagePlan
+          component: AgriUsagePlan,
         },
         {
           path: '/baseWaterCharge/index.do',
-          component: BaseWaterCharge
+          component: BaseWaterCharge,
         },
         {
           path: '/distWaterInfo/distWaterInfo.do',
-          component: DistWaterInfo
+          component: DistWaterInfo,
         },
         {
           path: '/waterSourceChargeInfo',
-          component: WaterSourceChargeInfo
+          component: WaterSourceChargeInfo,
         },
         {
           path: '/measureTypeChargeInfo',
-          component: MeasureTypeChargeInfo
+          component: MeasureTypeChargeInfo,
         },
         {
           path: '/deviceInfo/deviceInfo.do',
-          component: DeviceInfo
+          component: DeviceInfo,
         },
         {
           path: '/distAppendWaterInfo/distAppendWaterInfo.do',
-          component: DistAppendWaterInfo
+          component: DistAppendWaterInfo,
         },
         {
           path: '/useWater/water.do',
-          component: WaterUsageInfo
+          component: WaterUsageInfo,
         },
         {
           path: '/wellsUsePowerStatistics/wellsUsePower.do',
-          component: PowerUsageInfo
+          component: PowerUsageInfo,
         },
         {
           path: '/saleWaterInfo/saleWaterInfo.do',
-          component: WaterSaleInfo
+          component: WaterSaleInfo,
         },
         {
           path: '/waterCardInfo/waterCardInfo.do',
-          component: WaterCardInfo
+          component: WaterCardInfo,
         },
         {
           path: '/dataDownload',
-          component: DataDownload
+          component: DataDownload,
         },
         {
           path: '/wellsRechargeStatistics/wellsRecharge.do',
-          component: RptChargedDetail
+          component: RptChargedDetail,
         },
         {
           path: '/device/realTimeAlarm.do',
-          component: RealTimeAlarmInfo
+          component: RealTimeAlarmInfo,
         },
         { path: '/device/device.do', component: DeviceAlarmHistory },
         {
           path: '/abnormalWellAnalysis/index.do',
-          component: WaterUsageChartAnalysis
+          component: WaterUsageChartAnalysis,
         },
         {
           path: '/threeRedLineAnalysis/index.do',
-          component: ThreeRedLineInfo
+          component: ThreeRedLineInfo,
         },
         {
           path: '/intelligentAnalysis/index.do',
-          component: AbnormalWellAnalysis
+          component: AbnormalWellAnalysis,
         },
         {
           path: '/intelligentDeal/intelligentDeal.do',
-          component: AbnormalWellFixQuery
+          component: AbnormalWellFixQuery,
         },
         { path: '/sysArea/index.do', component: Regions },
         { path: '/sysWaterArea/index.do', component: WaterAdmins },
@@ -160,29 +160,29 @@ const router = new Router({
           children: [
             {
               path: '/paraSettingsHome/waterFee',
-              component: WaterFee
+              component: WaterFee,
             },
             {
               path: '/paraSettingsHome/WaterResource',
-              component: WaterResource
+              component: WaterResource,
             },
             {
               path: '/paraSettingsHome/WaterMeter',
-              component: WaterMeter
+              component: WaterMeter,
             },
             {
               path: '/paraSettingsHome/ThreePhaseVoltage',
-              component: ThreePhaseVoltage
+              component: ThreePhaseVoltage,
             },
             {
               path: '/paraSettingsHome/PowerSetting',
-              component: PowerSetting
+              component: PowerSetting,
             },
             {
               path: '/paraSettingsHome/ExceptParams',
-              component: ExceptParams
-            }
-          ]
+              component: ExceptParams,
+            },
+          ],
         },
         {
           path: '/baseInfo/index.do',
@@ -191,69 +191,69 @@ const router = new Router({
           children: [
             {
               path: '/basicInfoHome/Providers',
-              component: Providers
+              component: Providers,
             },
             {
               path: '/basicInfoHome/PumpPipeMaterial',
-              component: PumpPipeMaterial
+              component: PumpPipeMaterial,
             },
             {
               path: '/basicInfoHome/WaterType',
-              component: WaterType
+              component: WaterType,
             },
             {
               path: '/basicInfoHome/WellStatus',
-              component: WellStatus
+              component: WellStatus,
             },
             {
               path: '/basicInfoHome/WellUse',
-              component: WellUse
+              component: WellUse,
             },
             {
               path: '/basicInfoHome/IrrigationPattern',
-              component: IrrigationPattern
+              component: IrrigationPattern,
             },
             {
               path: '/basicInfoHome/IrrigationAreaType',
-              component: IrrigationAreaType
+              component: IrrigationAreaType,
             },
             {
               path: '/basicInfoHome/GeomorphicType',
-              component: GeomorphicType
+              component: GeomorphicType,
             },
             {
               path: '/basicInfoHome/MeasureEquipmentType',
-              component: MeasureEquipmentType
+              component: MeasureEquipmentType,
             },
             {
               path: '/basicInfoHome/WellEquipmentModel',
-              component: WellEquipmentModel
+              component: WellEquipmentModel,
             },
             {
               path: '/basicInfoHome/MaintenanceStaff',
-              component: MaintenanceStaff
-            }
-          ]
+              component: MaintenanceStaff,
+            },
+          ],
         },
         {
           path: '/information/introduction.do',
-          component: SysIntro
+          component: SysIntro,
         },
         {
           path: '/flow/index.do',
-          component: Workflow
+          component: Workflow,
         },
         {
           path: '/help/index.do',
-          component: Help
-        }
-      ]
+          component: Help,
+        },
+      ],
     },
     {
       path: '*',
-      component: NotFound
-    }
-  ]
+      component: NotFound,
+    },
+  ],
 })
 
 router.beforeEach((to, from, next) => {

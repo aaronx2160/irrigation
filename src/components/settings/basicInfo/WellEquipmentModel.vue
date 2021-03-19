@@ -90,7 +90,7 @@ export default {
       type: 'sysdevicemodel',
       DeviceModelEdit: { id: '', name: '' },
       addProviderVisible: false,
-      editProviderVisible: false
+      editProviderVisible: false,
     }
   },
   mounted() {
@@ -109,7 +109,7 @@ export default {
       http('post', '/api/basicInfo', {
         name: this.DeviceModelName,
         type: this.type,
-        colName: this.colName
+        colName: this.colName,
       }).then(() => {
         this.$message.success('添加成功！')
         this.addProviderVisible = false
@@ -134,7 +134,7 @@ export default {
       this.$confirm('此操作将永久删除该机井设备型号, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
-        type: 'warning'
+        type: 'warning',
       }).then(() => {
         http('delete', '/api/basicInfo/' + this.type + '/' + row.Id).then(
           () => {
@@ -143,8 +143,8 @@ export default {
           }
         )
       })
-    }
-  }
+    },
+  },
 }
 </script>
 

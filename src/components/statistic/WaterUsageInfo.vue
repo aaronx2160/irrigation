@@ -136,14 +136,14 @@ export default {
         dataArr: [],
         DeviceName: '',
         DeviceCode: '',
-        CardCode: ''
+        CardCode: '',
       },
       useWaterInfo: [],
       deviceList: [],
       deviceNames: [],
       value: '',
       UsageDialogVisible: false,
-      pagination: { total: 0, pageNum: 0 }
+      pagination: { total: 0, pageNum: 0 },
     }
   },
   computed: {
@@ -163,7 +163,7 @@ export default {
           getYMDHMS(this.formSearch.dataArr[1])
         )
       }
-    }
+    },
   },
   created() {
     this.deviceList = this.$store.getters.getWellList
@@ -242,8 +242,8 @@ export default {
       this.$refs.formSearch.resetFields()
       this.pagination.pageNum = 1
       this.getUseWaterInfo()
-    }
-  }
+    },
+  },
 }
 </script>
 <style lang="less" scoped>

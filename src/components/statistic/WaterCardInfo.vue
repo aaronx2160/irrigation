@@ -117,7 +117,7 @@ export default {
       searchForm: { OwnerName: '', CardCode: '', OwnerTelphone: '' },
       dataFiltered: null,
       filterOn: false,
-      searchType: ''
+      searchType: '',
     }
   },
   mounted() {
@@ -126,7 +126,7 @@ export default {
   },
   methods: {
     async getData() {
-      const deviceId = this.deviceList.map(v => {
+      const deviceId = this.deviceList.map((v) => {
         return v.Id
       })
       const { data: res } = await this.$http.post('/api/waterCard', deviceId)
@@ -155,7 +155,7 @@ export default {
       }
       this.$store.dispatch(GETDISABLED)
       this.filterOn = true
-      this.dataFiltered = this.cardInfo.filter(item => {
+      this.dataFiltered = this.cardInfo.filter((item) => {
         return item[this.searchType] === this.searchForm[this.searchType]
       })
       this.handlePageChange(1)
@@ -169,9 +169,9 @@ export default {
       this.$confirm('此操作将永久删除该水卡, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
-        type: 'warning'
+        type: 'warning',
       })
-        .then(async action => {
+        .then(async (action) => {
           if (action === 'confirm') {
             const { data: res } = await this.$http.delete(
               '/api/waterCard/' + id
@@ -184,11 +184,11 @@ export default {
             }
           }
         })
-        .catch(err => {
+        .catch((err) => {
           if (err) return this.$message.info('取消删除。')
         })
-    }
-  }
+    },
+  },
 }
 </script>
 

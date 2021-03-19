@@ -116,43 +116,43 @@ export default {
       pswdForm: {
         oldPswd: '',
         newPswd: '',
-        pswdConfirm: ''
+        pswdConfirm: '',
       },
       pswdChangerules: {
         oldPswd: [
           {
             required: true,
             message: '旧密码不能为空',
-            trigger: 'blur'
+            trigger: 'blur',
           },
           {
             min: 6,
             max: 15,
             message: '长度在 6 到 15 个字符',
-            trigger: 'blur'
-          }
+            trigger: 'blur',
+          },
         ],
         newPswd: [
           {
             required: true,
             message: '新密码不能为空',
-            trigger: 'blur'
+            trigger: 'blur',
           },
           {
             min: 6,
             max: 15,
             message: '长度在 6 到 15 个字符',
-            trigger: 'blur'
-          }
+            trigger: 'blur',
+          },
         ],
         pswdConfirm: [
           {
             required: true,
             message: '确认密码不能为空',
-            trigger: 'blur'
+            trigger: 'blur',
           },
-          { validator: validatePass, trigger: 'blur' }
-        ]
+          { validator: validatePass, trigger: 'blur' },
+        ],
       },
       iconsObj: {
         '1': 'iconfont icon-user',
@@ -163,10 +163,10 @@ export default {
         '6': 'iconfont icon-shuju',
         '7': 'iconfont icon-shuju',
         '8': 'iconfont icon-shuju',
-        '26': 'iconfont icon-shuju'
+        '26': 'iconfont icon-shuju',
       },
       isCollapsed: false,
-      activePath: ''
+      activePath: '',
     }
   },
   created() {
@@ -182,11 +182,11 @@ export default {
       const { rid } = this.user
       this.menuList = await http('get', `/api/menu/${rid}`, null)
       const arrTemp = this.menuList.slice(0)
-      arrTemp.map(item => {
+      arrTemp.map((item) => {
         item.children = []
       })
       for (let i = 0; i < arrTemp.length; i++) {
-        arrTemp.map(item => {
+        arrTemp.map((item) => {
           if (arrTemp[i].ParentMenuId === item.MenuCode) {
             item.children.push(arrTemp[i])
           }
@@ -203,7 +203,7 @@ export default {
       this.$store.dispatch(GETWELLLIST)
     },
     changePswd() {
-      this.$refs.pswdForm.validate(async valid => {
+      this.$refs.pswdForm.validate(async (valid) => {
         if (!valid) return
         const { data: res } = await this.$http.put(
           '/api/changePassword/' + this.user.username,
@@ -230,8 +230,8 @@ export default {
     saveNavState(activePath) {
       window.sessionStorage.setItem('activePath', activePath)
       this.activePath = activePath
-    }
-  }
+    },
+  },
 }
 </script>
 

@@ -61,7 +61,7 @@ export default {
       timeNow: null,
       getTimeNowId: null,
       // 定义每一个图表的全屏状态
-      fullScreenStatus: false
+      fullScreenStatus: false,
     }
   },
   mounted() {
@@ -88,14 +88,14 @@ export default {
     },
     handleFfullScreenClick(status) {
       this.fullScreenStatus = status
-    }
+    },
   },
   components: {
     WellWaterUsageRankChart,
     OnOffLineChart,
     MonthlyUsageChart,
-    EchartAMap
-  }
+    EchartAMap,
+  },
 }
 </script>
 <style lang="less" scoped>

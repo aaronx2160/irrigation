@@ -29,14 +29,14 @@ export default {
   name: 'ParaSettingsHome',
   data() {
     return {
-      basicInfoMenuList: []
+      basicInfoMenuList: [],
     }
   },
   mounted() {
     const menuList = this.$store.getters.getMenuList
     console.log(menuList)
     this.basicInfoMenuList = menuList[4]['children'][4]['children']
-  }
+  },
 }
 </script>
 

@@ -306,7 +306,7 @@ export default {
       wellDetailData: { DeviceName: 'placeHolder' },
       searchBy: { DeviceName: null, DeviceCode: null },
       searchFlag: null,
-      filterOn: false
+      filterOn: false,
     }
   },
   mounted() {
@@ -342,7 +342,7 @@ export default {
         return
       this.filterOn = true
       let that = this
-      this.currentPageData = this.wellList.filter(v => {
+      this.currentPageData = this.wellList.filter((v) => {
         return v[that.searchFlag] === that.searchBy[that.searchFlag].trim()
       })
     },
@@ -351,8 +351,8 @@ export default {
       this.searchBy.DeviceName = ''
       this.searchBy.DeviceCode = ''
       this.handlePageChange(1)
-    }
-  }
+    },
+  },
 }
 </script>
 

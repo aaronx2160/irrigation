@@ -76,7 +76,7 @@ export default {
         DeviceCode: '',
         DeviceName: '',
         CardCode: '',
-        dataRange: []
+        dataRange: [],
       },
       deviceNameArr: [],
       formData: {
@@ -90,10 +90,10 @@ export default {
           已用费用: 'UseMoney',
           剩余金额: 'RemainMoney',
           开泵时间: 'OpenPumpTime',
-          关泵时间: 'StopPumpTime'
+          关泵时间: 'StopPumpTime',
         },
-        data: []
-      }
+        data: [],
+      },
     }
   },
   mounted() {
@@ -145,8 +145,8 @@ export default {
     finishDownload() {
       console.log('finished loading')
       this.$loading({ fullscreen: true }).close()
-    }
-  }
+    },
+  },
 }
 </script>
 

@@ -138,35 +138,35 @@ export default {
       options: [
         {
           value: '2020',
-          label: '2020'
+          label: '2020',
         },
         {
           value: '2021',
-          label: '2021'
+          label: '2021',
         },
         {
           value: '2022',
-          label: '2022'
+          label: '2022',
         },
         {
           value: '2023',
-          label: '2023'
+          label: '2023',
         },
         {
           value: '2024',
-          label: '2024'
+          label: '2024',
         },
         {
           value: '2025',
-          label: '2025'
-        }
+          label: '2025',
+        },
       ],
       value: '',
       UsageDialogVisible: false,
       pageNum: 1,
       pageData: null,
       filterOn: false,
-      filteredData: null
+      filteredData: null,
     }
   },
   mounted() {
@@ -176,11 +176,11 @@ export default {
   methods: {
     async getData() {
       const devices = this.deviceInfo.slice(0)
-      const deviceId = devices.map(v => {
+      const deviceId = devices.map((v) => {
         return v.DeviceCode
       })
       const { data: res } = await this.$http.post('/api/rptcardoperatedetail', {
-        deviceId
+        deviceId,
       })
       if (res.meta.status !== 200) {
         this.$message.error('获取售水信息失败')
@@ -199,8 +199,8 @@ export default {
     },
     handlePage(pageNum) {
       this.pageData = pageNation(this.waterChargeInfoArr, pageNum, 10).newArr
-    }
-  }
+    },
+  },
 }
 </script>
 

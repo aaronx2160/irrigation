@@ -575,7 +575,7 @@ export default {
       waterAreas: {
         WaterAreaName: '成仓区水利局',
         WaterAreaCode: '01',
-        WaterAreaId: '174b014cad674b558d86b50e85453ec6'
+        WaterAreaId: '174b014cad674b558d86b50e85453ec6',
       },
       extendedWellInfo: {
         AllowWater: 0,
@@ -640,8 +640,8 @@ export default {
         WellDepth: 0,
         WellDiameter: 0,
         WellUse: '灌溉',
-        YearWaterSum: 0
-      }
+        YearWaterSum: 0,
+      },
     }
   },
   computed: {},
@@ -689,7 +689,7 @@ export default {
       )
     },
     fetchAreaNames(arr, parentId) {
-      let abc = arr.filter(v => {
+      let abc = arr.filter((v) => {
         return v.ParentAreaId === parentId
       })
       if (!abc) return
@@ -730,7 +730,7 @@ export default {
       this.$confirm('是否继续添加新的机井?', '提示', {
         confirmButtonText: '继续添加',
         cancelButtonText: '取消',
-        type: 'warning'
+        type: 'warning',
       })
         .then(() => {})
         .catch(() => {
@@ -742,8 +742,8 @@ export default {
     },
     handleGoBack() {
       this.$router.push('/baseDeviceInfo/index.do')
-    }
-  }
+    },
+  },
 }
 </script>
 

@@ -28,7 +28,7 @@
 export default {
   data() {
     return {
-      basicInfoMenuList: []
+      basicInfoMenuList: [],
     }
   },
   mounted() {
@@ -37,7 +37,7 @@ export default {
     // const active = window.sessionStorage.getItem('activePath')
     // console.log(active)
     // // window.sessionStorage.setItem()
-  }
+  },
 }
 </script>
 

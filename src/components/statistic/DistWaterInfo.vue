@@ -155,7 +155,7 @@ export default {
       pageNum: 1,
       filterOn: false,
       searchBy: { DeviceCode: '', DeviceName: '' },
-      searchFlag: ''
+      searchFlag: '',
     }
   },
   mounted() {
@@ -202,13 +202,13 @@ export default {
       this.$store.dispatch(GETDISABLED)
       const { DeviceCode, DeviceName } = this.searchBy
       if (DeviceCode === '' && DeviceName === '') return
-      this.pageData = this.waterPlan.filter(item => {
+      this.pageData = this.waterPlan.filter((item) => {
         return item[this.searchFlag] === this.searchBy[this.searchFlag]
       })
       this.filterOn = true
     },
     handleSelectSearch() {
-      const filteredData = this.waterPlan.filter(item => {
+      const filteredData = this.waterPlan.filter((item) => {
         return (
           item.WellUse === this.wellUseVal && item.DistYear === this.yearVal
         )
@@ -222,8 +222,8 @@ export default {
       this.searchBy.DeviceName = ''
       this.getPageData()
       this.filterOn = false
-    }
-  }
+    },
+  },
 }
 </script>
 

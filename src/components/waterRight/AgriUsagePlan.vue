@@ -265,8 +265,8 @@ export default {
         DistRatio: 0,
         DistPrice: 0,
         IsAppendWater: 0,
-        DeviceId: null
-      }
+        DeviceId: null,
+      },
     }
   },
   computed: {
@@ -277,7 +277,7 @@ export default {
         yearArr.push(currentYear++)
       }
       return yearArr
-    }
+    },
   },
   mounted() {
     this.getAgriWaterPlan()
@@ -302,8 +302,8 @@ export default {
         this.addPlanForm
       )
       console.log(res)
-    }
-  }
+    },
+  },
 }
 </script>
 

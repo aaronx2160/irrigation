@@ -11,7 +11,7 @@ export default {
     return {
       chartInstance: null,
       mapInstance: null,
-      allData: null
+      allData: null,
     }
   },
   created() {
@@ -51,7 +51,7 @@ export default {
           echartsLayerInteractive: false,
           // 是否启用大数据模式 默认为 false
           // 此配置项从 v1.9.0 起开始支持
-          largeMode: false
+          largeMode: false,
           // 说明：如果想要添加卫星、路网等图层
           // 暂时先不要使用layers配置，因为存在Bug
           // 建议使用amap.add的方式，使用方式参见最下方代码
@@ -65,13 +65,13 @@ export default {
             // 数据格式跟在 geo 坐标系上一样，每一项都是 [经度，纬度，数值大小，其它维度...]
             data: [
               [120, 30, 8],
-              [120.1, 30.2, 20]
+              [120.1, 30.2, 20],
             ],
             encode: {
-              value: 2
-            }
-          }
-        ]
+              value: 2,
+            },
+          },
+        ],
       }
       this.chartInstance.setOption(initOption)
     },
@@ -82,14 +82,14 @@ export default {
       let that = this
       new that.$AMap.DistrictSearch({
         extensions: 'all',
-        subdistrict: 0
-      }).search('宝鸡市', function(status, result) {
+        subdistrict: 0,
+      }).search('宝鸡市', function (status, result) {
         // 外多边形坐标数组和内多边形坐标数组
         const outer = [
           new that.$AMap.LngLat(-360, 90, true),
           new that.$AMap.LngLat(-360, -90, true),
           new that.$AMap.LngLat(360, -90, true),
-          new that.$AMap.LngLat(360, 90, true)
+          new that.$AMap.LngLat(360, 90, true),
         ]
         const holes = result.districtList[0].boundaries
         const pathArray = [outer]
@@ -113,7 +113,7 @@ export default {
                           虚线：[10,10] ，[10,10] 表示10个像素的实线和10个像素的空白（如此反复）组成的虚线
                           点画线：[10,2,10]， [10,2,10] 表示10个像素的实线和2个像素的空白 + 10个像素的实
                           线和10个像素的空白 （如此反复）组成的虚线*/
-          strokeDasharray: [10, 2, 10]
+          strokeDasharray: [10, 2, 10],
         })
         polygon.setPath(pathArray)
         that.mapInstance.add(polygon)
@@ -151,7 +151,7 @@ export default {
       this.updateChart()
     },
     updateChart() {
-      const seriesArr = this.allData.map(v => {
+      const seriesArr = this.allData.map((v) => {
         return {
           type: 'effectScatter',
           rippleEffect: { scale: 5, brushType: 'stroke' },
@@ -159,17 +159,17 @@ export default {
           data: [
             {
               name: v.DeviceName,
-              value: [v.Longitude, v.Latitude]
-            }
-          ]
+              value: [v.Longitude, v.Latitude],
+            },
+          ],
         }
       })
       const dataOption = {
-        series: seriesArr
+        series: seriesArr,
       }
       this.chartInstance.setOption(dataOption)
-    }
-  }
+    },
+  },
 }
 </script>
 

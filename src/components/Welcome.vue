@@ -9,12 +9,12 @@ import LiveCharts from './liveInfo/LiveCharts'
 import { GETLIVEDATALIST, GETWATERAREAS } from '../store/types'
 export default {
   components: {
-    LiveCharts
+    LiveCharts,
   },
   mounted() {
     this.$store.dispatch(GETLIVEDATALIST)
     this.$store.dispatch(GETWATERAREAS)
-  }
+  },
 }
 </script>
 
