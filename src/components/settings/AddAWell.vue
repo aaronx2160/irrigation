@@ -23,7 +23,7 @@
           >提交</el-button
         >
       </div>
-      <v-form v-model="valid">
+      <v-form>
         <v-container>
           <v-row>
             <v-col cols="9" md="3">
@@ -45,11 +45,10 @@
             <v-col cols="9" md="3">
               <v-select
                 v-model="areaSelected"
-                :items="areasL5"
-                item-text="AreaName"
-                item-value="Id"
+                :items="areas"
+                :item-text="item=>`${item.village}`"
+                :item-value="item=>`${item.areaCode}`"
                 label="行政区域"
-                return-object
                 dense
                 @change="handleSelectChange($event, 'Area')"
               ></v-select>
@@ -58,12 +57,11 @@
             <v-col cols="9" md="3">
               <v-select
                 v-model="areaSelected"
-                :items="areasL5"
-                item-text="AreaCode"
-                item-value="Id"
+                :items="areas"
+                :item-text="item=>`${item.areaCode}`"
+                :item-value="item=>`${item.areaCode}`"
                 label="行政区域码"
                 dense
-                return-object
                 @change="handleSelectChange($event, 'AreaCode')"
               ></v-select>
             </v-col>
@@ -107,7 +105,8 @@
             <v-col cols="9" md="3">
               <v-select
                 v-model="extendedWellInfo.DeviceModel"
-                :items="deviceModel.DeviceModel"
+                :items="deviceModel"
+                :item-text="item => `${item.DeviceModel}`"
                 label="设备型号"
                 dense
               ></v-select>
@@ -134,6 +133,7 @@
               <v-select
                 v-model="extendedWellInfo.PumpMaterial"
                 :items="pumpMaterial"
+                :item-text="item => `${item.PumpMaterial}`"
                 label="泵管材质"
                 dense
               ></v-select>
@@ -179,6 +179,7 @@
               <v-select
                 v-model="extendedWellInfo.SimOperator"
                 :items="operator"
+                :item-text="item => `${item.Operator}`"
                 label="手机卡运营商"
                 dense
               ></v-select>
@@ -196,6 +197,7 @@
               <v-select
                 v-model="extendedWellInfo.UseWaterType"
                 :items="useWaterType"
+                :item-text="item => `${item.UseWaterType}`"
                 label="取水类型"
                 dense
               ></v-select>
@@ -268,6 +270,7 @@
               <v-select
                 v-model="extendedWellInfo.ApplyStatus"
                 :items="applyStatus"
+                :item-text="item => `${item.ApplyStatus}`"
                 label="应用状况"
                 dense
               ></v-select>
@@ -277,6 +280,7 @@
               <v-select
                 v-model="extendedWellInfo.WellUse"
                 :items="wellUse"
+                :item-text="item => `${item.WellUse}`"
                 label="水井用途"
                 dense
               ></v-select>
@@ -287,6 +291,7 @@
               <v-select
                 v-model="extendedWellInfo.IrrigationMode"
                 :items="irrigationMode"
+                :item-text="item => `${item.IrrigationMode}`"
                 label="灌溉模式"
                 dense
               ></v-select>
@@ -436,6 +441,7 @@
               <v-select
                 v-model="extendedWellInfo.WaterMeterMeasurementType"
                 :items="measureType"
+                :item-text="item => `${item.MeasureType}`"
                 label="水量计量设施类型"
                 dense
               ></v-select>
@@ -498,6 +504,7 @@
               <v-select
                 v-model="extendedWellInfo.LandformType"
                 :items="landFormType"
+                :item-text="item => `${item.LandformType}`"
                 label="所在地貌类型"
                 dense
               ></v-select>
@@ -515,6 +522,7 @@
               <v-select
                 v-model="extendedWellInfo.IrrigationAreaType"
                 :items="irrigationAreaType"
+                :item-text="item => `${item.IrrigationAreaType}`"
                 label="所在灌区类型"
                 dense
               ></v-select>
@@ -522,11 +530,23 @@
           </v-row>
           <v-row>
             <v-col cols="9" md="3">
-              <v-text-field
-                v-model="extendedWellInfo.PhotoBefore"
-                label="机井安装前照片"
-                dense
-              ></v-text-field>
+              <el-upload
+                      ref="img_upload"
+                      :headers="headers"
+                      action="/api/imgUpload"
+                      :auto-upload="false"
+                      class="upload-demo"
+                      :on-preview="handlePreview"
+                      :on-remove="handleRemove"
+                      :file-list="fileList"
+                      :on-success ='handleSuccess'
+                      list-type="picture">
+
+                <el-button slot="trigger" size="small" type="primary">选择照片</el-button>
+                <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">点击上传</el-button>
+                <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+              </el-upload>
+
             </v-col>
             <v-col cols="9" md="3">
               <v-text-field
@@ -558,10 +578,10 @@ export default {
   name: 'AddAWell',
   data() {
     return {
+      fileList: [],
       fixed: false,
       areas: {},
-      areasL5: [],
-      areaSelected: {},
+      areaSelected: '',
       deviceModel: [],
       pumpMaterial: [],
       operator: [],
@@ -642,6 +662,7 @@ export default {
         WellUse: '灌溉',
         YearWaterSum: 0,
       },
+      headers:{Authorization:''}
     }
   },
   computed: {},
@@ -650,71 +671,56 @@ export default {
   },
   mounted() {
     this.getData()
+    this.headers.Authorization=window.sessionStorage.getItem('token')
     window.addEventListener('scroll', this.addFixed)
   },
   destroyed() {
     window.removeEventListener('scroll', this.addFixed)
   },
   methods: {
+    handleSuccess(r,f,fl){
+      console.log(r)
+      console.log(f)
+      console.log(fl)
+    },
+    submitUpload(){
+      this.$refs.img_upload.submit()
+
+    },
+    handleRemove(file, fileList) {
+      console.log(file, fileList);
+    },
+    handlePreview(file) {
+      console.log(file);
+    },
     async getData() {
-      //get area info
-      // this.areas = this.$store.getters.getAreas
-      // this.fetchAreaNames(this.areas, '88aaf98da88f45e799a357e7de58a69f')
-      // this.areasL5 = this.areasL5[0]
-      //   .concat(this.areasL5[1])
-      //   .concat(this.areasL5[2])
+      // get area info
+      this.areas = this.$store.getters.getAreas
       //设备型号
-      // this.deviceModel = await this.getAddFormSelectOptions('deviceModel')
       this.deviceModel = await http('get', '/api/basicInfo/sysdevicemodel')
-      console.log(this.deviceModel)
       //泵管材质 pumpMaterial
-      this.pumpMaterial = await this.getAddFormSelectOptions('pumpMaterial')
+      this.pumpMaterial = await http('get', '/api/basicInfo/syspumpmaterial')
       //运营商
-      this.operator = await this.getAddFormSelectOptions('operator')
+      this.operator = await http('get', '/api/basicInfo/sysoperator')
       //取水类型
-      this.useWaterType = await this.getAddFormSelectOptions('useWaterType')
+      this.useWaterType = await http('get', '/api/basicInfo/sysusewatertype')
       //应用状况 applyStatus
-      this.applyStatus = await this.getAddFormSelectOptions('applyStatus')
+      this.applyStatus = await http('get', '/api/basicInfo/sysapplystatus')
       //水井用途
-      this.wellUse = await this.getAddFormSelectOptions('wellUse')
+      this.wellUse = await http('get', '/api/basicInfo/syswelluse')
       //灌溉模式irrigationMode
-      this.irrigationMode = await this.getAddFormSelectOptions('irrigationMode')
+      this.irrigationMode = await http('get', '/api/basicInfo/sysirrigationmode')
       //水量计量设施类型：
-      this.measureType = await this.getAddFormSelectOptions('measureType')
-
+      this.measureType = await http('get', '/api/basicInfo/sysmeasuretype')
       //地貌类型landFormType
-      this.landFormType = await this.getAddFormSelectOptions('landFormType')
-      this.irrigationAreaType = await this.getAddFormSelectOptions(
-        'irrigationAreaType'
-      )
+      this.landFormType = await http('get', '/api/basicInfo/syslandformtype')
+//
+      this.irrigationAreaType = await http('get', '/api/basicInfo/sysirrigationareatype')
     },
-    fetchAreaNames(arr, parentId) {
-      let abc = arr.filter((v) => {
-        return v.ParentAreaId === parentId
-      })
-      if (!abc) return
-      // if (abc.length !== 0) {
-
-      // }
-
-      for (let i = 0; i < abc.length; i++) {
-        const cde = this.fetchAreaNames(arr, abc[i].Id)
-        if (cde.length !== 0) {
-          this.areasL5.push(cde)
-        }
-      }
-      return abc
-    },
-    async getAddFormSelectOptions(url) {
-      const { data: res } = await this.$http.get('/api/' + url)
-      if (res.meta.status !== 200) {
-        this.$message.error('获取' + url + '选项失败')
-      } else {
-        return res.data
-      }
-    },
-    handleSelectChange() {
-      this.extendedWellInfo.AreaId = this.areaSelected.Id
+    handleSelectChange(e,k) {
+      console.log(e)
+      console.log(k)
+      this.extendedWellInfo.AreaId = this.areaSelected
     },
     async handleSubmit() {
       const { data: res } = await this.$http.post(
