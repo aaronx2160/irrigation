@@ -79,12 +79,12 @@ export default {
       searchForm: {
         CardCode: '',
         DeviceCode: '',
-        dateArr: [],
+        dateArr: []
       },
 
       total: 0,
       pageNum: 1,
-      pageData: [],
+      pageData: []
     }
   },
   mounted() {
@@ -98,10 +98,10 @@ export default {
     async handlePage(pageNum) {
       this.pageNum = pageNum
       this.pageData = await http('post', '/api/rptchargeddetail', {
-        pageNum: this.pageNum,
+        pageNum: this.pageNum
       })
-    },
-  },
+    }
+  }
 }
 </script>
 

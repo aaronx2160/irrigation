@@ -64,7 +64,7 @@ export default {
       cluster: [],
       selectedItem: 1,
       pageData: [],
-      pageNum: 1,
+      pageNum: 1
     }
   },
   created() {
@@ -75,12 +75,14 @@ export default {
     this.handlePage(0)
     this.geoLocate()
     this.addMarker()
-    this.markers.forEach((v) => {
+    this.markers.forEach(v => {
       v.on('click', this.openInfoWindow)
     })
+    let td = document.getElementById('preview')
+    console.log(td)
   },
   destroyed() {
-    this.markers.forEach((v) => {
+    this.markers.forEach(v => {
       v.off('click', this.openInfoWindow(v))
     })
   },
@@ -93,22 +95,22 @@ export default {
         // layers: [satellite],
         center: this.center, //中心点坐标
         viewMode: '3D', //使用3D视图
-        resizeEnable: true,
+        resizeEnable: true
       }
       this.mapInstance = new this.$AMap.Map('AMap', initOption)
     },
     geoLocate() {
       let that = this
-      this.$AMap.plugin('AMap.Geolocation', function () {
+      this.$AMap.plugin('AMap.Geolocation', function() {
         const geolocation = new that.$AMap.Geolocation({
           enableHighAccuracy: true, //是否使用高精度定位，默认:true
           timeout: 10000, //超过10秒后停止定位，默认：5s
           buttonPosition: 'RB', //定位按钮的停靠位置
-          buttonOffset: new that.$AMap.Pixel(10, 20), //定位按钮与设置的停靠位置的偏移量，默认：Pixel(10, 20)
+          buttonOffset: new that.$AMap.Pixel(10, 20) //定位按钮与设置的停靠位置的偏移量，默认：Pixel(10, 20)
           // zoomToAccuracy: true, //定位成功后是否自动调整地图视野到定位点
         })
         that.mapInstance.addControl(geolocation)
-        geolocation.getCurrentPosition(function (status, result) {
+        geolocation.getCurrentPosition(function(status, result) {
           if (status === 'complete') {
             that.currentPosition = result
             that.center = [result.position.lng, result.position.lat]
@@ -125,7 +127,7 @@ export default {
       let iconOk = new that.$AMap.Icon({
         size: new that.$AMap.Size(30, 38), // 图标尺寸
         image: require('../assets/wellOk.png'),
-        imageSize: new that.$AMap.Size(30, 38), // 根据所设置的大小拉伸或压缩图片
+        imageSize: new that.$AMap.Size(30, 38) // 根据所设置的大小拉伸或压缩图片
       })
       for (let i = 0; i < that.wellList.length; i++) {
         let marker = new that.$AMap.Marker({
@@ -134,18 +136,18 @@ export default {
           icon: iconOk, // 添加 Icon 实例
           title: '自定义图标',
           zoom: 13,
-          extData: that.wellList[i],
+          extData: that.wellList[i]
         })
         that.mapInstance.add(marker)
         that.markers.push(marker)
       }
 
-      that.$AMap.plugin(['AMap.MarkerClusterer'], function () {
+      that.$AMap.plugin(['AMap.MarkerClusterer'], function() {
         that.cluster = new that.$AMap.MarkerClusterer(
           that.mapInstance,
           that.markers,
           {
-            gridSize: 80,
+            gridSize: 80
           }
         )
       })
@@ -155,9 +157,8 @@ export default {
       let that = this
       const info = `
 <div style="border-radius: 10px; background: #ffffff; width: 450px;" >
-<h1 style="color: white; background:#53b09a; margin: 0; padding: 5px;">${
-        wellData.DeviceName + '详细信息'
-      }</h1>
+<h1 style="color: white; background:#53b09a; margin: 0; padding: 5px;">${wellData.DeviceName +
+        '详细信息'}</h1>
 <table border="1px" style="border-collapse:collapse; text-align: center;" id="infoWin">
 <tbody>
 <tr>
@@ -197,14 +198,14 @@ export default {
       }</td>
 </tr>
 <tr>
-<th style="background: #cccccc;">安装前现场照片：</th><td><a href="">预览</a></td><th style="background: #cccccc;">安装后现场照片：</th><td><a href="">预览</a></td>
+<th style="background: #cccccc;">安装前现场照片：</th><td id="preview">预览</td><th style="background: #cccccc;">安装后现场照片：</th><td><a href="">预览</a></td>
 </tr>
 </tbody>
 </table>
 </div>`
 
       const infoWindow = new that.$AMap.InfoWindow({
-        content: info, //使用默认信息窗体框样式，显示信息内容
+        content: info //使用默认信息窗体框样式，显示信息内容
       })
 
       infoWindow.open(that.mapInstance, [wellData.Longitude, wellData.Latitude])
@@ -215,9 +216,8 @@ export default {
       let that = this
       const info = `
 <div style="border-radius: 10px; background: #ffffff; width: 450px;" >
-<h1 style="color: white; background:#53b09a; margin: 0; padding: 5px;">${
-        wellData.DeviceName + '详细信息'
-      }</h1>
+<h1 style="color: white; background:#53b09a; margin: 0; padding: 5px;">${wellData.DeviceName +
+        '详细信息'}</h1>
 <table border="1px" style="border-collapse:collapse; text-align: center;" id="infoWin">
 <tbody>
 <tr>
@@ -264,14 +264,13 @@ export default {
 </div>`
 
       const infoWindow = new that.$AMap.InfoWindow({
-        content: info, //使用默认信息窗体框样式，显示信息内容
+        content: info //使用默认信息窗体框样式，显示信息内容
       })
 
       infoWindow.open(that.mapInstance, [wellData.Longitude, wellData.Latitude])
       that.mapInstance.setCenter([wellData.Longitude, wellData.Latitude])
     },
     handlePage(flag) {
-      console.log(this.wellList)
       const totalPage = Math.ceil(this.wellList.length / 10)
       this.pageNum += flag
       if (this.pageNum < 1) {
@@ -284,7 +283,10 @@ export default {
     handleDeviceClick(device) {
       this.openInfoWindow2(device)
     },
-  },
+    handlePreview() {
+      console.log('hi')
+    }
+  }
 }
 </script>
 

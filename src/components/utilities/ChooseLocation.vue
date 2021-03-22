@@ -71,40 +71,40 @@ export default {
       cityId: '',
       districtId: '',
       townId: '',
-      villageId: '',
+      villageId: ''
     }
   },
   computed: {
     provinces() {
       const areas = this.$store.getters.getAreas
-      return areas.filter((v) => {
+      return areas.filter(v => {
         return v.WaterAreaLevel === 1
       })
     },
     cities() {
       const areas = this.$store.getters.getAreas
-      return areas.filter((v) => {
+      return areas.filter(v => {
         return v.ParentWaterAreaId === this.provinceId
       })
     },
     districts() {
       const areas = this.$store.getters.getAreas
-      return areas.filter((v) => {
+      return areas.filter(v => {
         return v.ParentWaterAreaId === this.cityId
       })
     },
     towns() {
       const areas = this.$store.getters.getAreas
-      return areas.filter((v) => {
+      return areas.filter(v => {
         return v.ParentWaterAreaId === this.districtId
       })
     },
     villages() {
       const areas = this.$store.getters.getAreas
-      return areas.filter((v) => {
+      return areas.filter(v => {
         return v.ParentWaterAreaId === this.townId
       })
-    },
+    }
   },
   created() {
     this.getArea()
@@ -112,8 +112,8 @@ export default {
   methods: {
     getArea() {
       this.$store.dispatch(GETAREAS)
-    },
-  },
+    }
+  }
 }
 </script>
 

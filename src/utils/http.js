@@ -20,7 +20,7 @@ const http = async (type, url, data) => {
     default:
       res = {
         data: null,
-        meta: { status: 404, msg: 'unavailable http method' },
+        meta: { status: 404, msg: 'unavailable http method' }
       }
   }
   if (res.status !== 200) {

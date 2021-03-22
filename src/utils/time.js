@@ -1,4 +1,4 @@
-const getYMDHMS = (timestamp) => {
+const getYMDHMS = timestamp => {
   const time = new Date(timestamp)
   const year = time.getFullYear()
   let month = time.getMonth() + 1

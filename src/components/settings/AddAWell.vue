@@ -16,14 +16,14 @@
         :class="{ fixed: fixed }"
       >
         <span class="iconfont icon-fanhui back" @click="handleGoBack"
-          ><tag type="info">返回</tag></span
+          ><el-tag type="info">返回</el-tag></span
         >
         <h3>机井添加页面</h3>
         <el-button type="success" size="small" @click="handleSubmit"
           >提交</el-button
         >
       </div>
-      <v-form>
+      <v-form v-model="valid" ref="add_well_form">
         <v-container>
           <v-row>
             <v-col cols="9" md="3">
@@ -46,11 +46,12 @@
               <v-select
                 v-model="areaSelected"
                 :items="areas"
-                :item-text="item=>`${item.village}`"
-                :item-value="item=>`${item.areaCode}`"
+                :item-text="item => `${item.village}`"
+                :item-value="item => `${item.areaCode}`"
                 label="行政区域"
                 dense
                 @change="handleSelectChange($event, 'Area')"
+                :rules="rules"
               ></v-select>
             </v-col>
 
@@ -58,11 +59,12 @@
               <v-select
                 v-model="areaSelected"
                 :items="areas"
-                :item-text="item=>`${item.areaCode}`"
-                :item-value="item=>`${item.areaCode}`"
+                :item-text="item => `${item.areaCode}`"
+                :item-value="item => `${item.areaCode}`"
                 label="行政区域码"
                 dense
                 @change="handleSelectChange($event, 'AreaCode')"
+                :rules="rules"
               ></v-select>
             </v-col>
           </v-row>
@@ -72,7 +74,7 @@
                 v-model="extendedWellInfo.DeviceCode"
                 label="设备编码"
                 dense
-                required
+                :rules="rules"
               ></v-text-field>
             </v-col>
             <v-col cols="9" md="3">
@@ -88,7 +90,7 @@
                 v-model="extendedWellInfo.DeviceName"
                 label="设备名称"
                 dense
-                required
+                :rules="rules"
               ></v-text-field>
             </v-col>
 
@@ -161,7 +163,7 @@
                 v-model="extendedWellInfo.OwnerTelphone"
                 label="手机号码"
                 dense
-                required
+                :rules="rules"
               ></v-text-field>
             </v-col>
 
@@ -218,7 +220,7 @@
                 v-model="extendedWellInfo.Latitude"
                 label="纬度"
                 dense
-                required
+                :rules="rules"
               ></v-text-field>
             </v-col>
             <v-col cols="9" md="3">
@@ -236,7 +238,7 @@
                 v-model="extendedWellInfo.Longitude"
                 label="经度"
                 dense
-                required
+                :rules="rules"
               ></v-text-field>
             </v-col>
 
@@ -311,7 +313,6 @@
                 v-model="extendedWellInfo.SJArea"
                 label="实际灌溉面积(亩)"
                 dense
-                required
               ></v-text-field>
             </v-col>
 
@@ -531,29 +532,61 @@
           <v-row>
             <v-col cols="9" md="3">
               <el-upload
-                      ref="img_upload"
-                      :headers="headers"
-                      action="/api/imgUpload"
-                      :auto-upload="false"
-                      class="upload-demo"
-                      :on-preview="handlePreview"
-                      :on-remove="handleRemove"
-                      :file-list="fileList"
-                      :on-success ='handleSuccess'
-                      list-type="picture">
-
-                <el-button slot="trigger" size="small" type="primary">选择照片</el-button>
-                <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">点击上传</el-button>
-                <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+                ref="img_upload_before"
+                :headers="headerBefore"
+                accept=".jpg,.jpeg,.png,.gif,.bmp,.pdf,.JPG,.JPEG,.PBG,.GIF,.BMP"
+                action="/api/imgUpload"
+                :auto-upload="false"
+                :multiple="false"
+                :on-preview="handlePreview"
+                :file-list="fileList"
+                :on-success="handleSuccess"
+                list-type="picture"
+                :limit="1"
+              >
+                <el-button slot="trigger" size="mini" type="primary"
+                  >选择照片</el-button
+                >
+                <el-button
+                  style="margin-left: 10px;"
+                  size="mini"
+                  type="success"
+                  @click="submitUpload"
+                  >点击上传</el-button
+                >
+                <div slot="tip" class="el-upload__tip">
+                  安装前照片
+                </div>
               </el-upload>
-
             </v-col>
             <v-col cols="9" md="3">
-              <v-text-field
-                v-model="extendedWellInfo.PhotoAfter"
-                label="机井安装后照片"
-                dense
-              ></v-text-field>
+              <el-upload
+                ref="img_upload_after"
+                :headers="headerAfter"
+                accept=".jpg,.jpeg,.png,.gif,.bmp,.pdf,.JPG,.JPEG,.PBG,.GIF,.BMP"
+                action="/api/imgUpload"
+                :auto-upload="false"
+                :multiple="false"
+                :on-preview="handlePreview"
+                :file-list="fileList"
+                :on-success="handleSuccess"
+                list-type="picture"
+                :limit="1"
+              >
+                <el-button slot="trigger" size="mini" type="primary"
+                  >选择照片</el-button
+                >
+                <el-button
+                  style="margin-left: 10px;"
+                  size="mini"
+                  type="success"
+                  @click="submitUpload"
+                  >点击上传</el-button
+                >
+                <div slot="tip" class="el-upload__tip">
+                  安装后照片
+                </div>
+              </el-upload>
             </v-col>
 
             <v-col cols="9" md="3">
@@ -567,6 +600,21 @@
         </v-container>
       </v-form>
     </el-card>
+    <el-dialog
+      title="照片预览"
+      :visible.sync="previewDialogVisible"
+      width="50%"
+    >
+      <img :src="imageUrl" alt="" />
+      <span slot="footer" class="dialog-footer">
+        <el-button
+          type="primary"
+          size="mini"
+          @click="previewDialogVisible = false"
+          >确 定</el-button
+        >
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -595,107 +643,119 @@ export default {
       waterAreas: {
         WaterAreaName: '成仓区水利局',
         WaterAreaCode: '01',
-        WaterAreaId: '174b014cad674b558d86b50e85453ec6',
+        WaterAreaId: '174b014cad674b558d86b50e85453ec6'
       },
       extendedWellInfo: {
         AllowWater: 0,
         AreaId: 'a151449d20ac4aafa37d52ffbfbcd4d0',
-        CreateTime: '2021-01-27T01:01:36.000Z',
+        CreateTime: '',
         DTUNo: '',
-        DeviceAreaCode: '610304022001',
-        DeviceCode: '6103040101',
-        DeviceModel: 'TJ710',
-        DeviceName: '太公庙1号井',
+        DeviceAreaCode: '',
+        DeviceCode: '',
+        DeviceModel: '',
+        DeviceName: '',
         DeviceNo: '',
-        DeviceType: 1,
+        DeviceType: 0,
         DeviceVersion: '',
-        DeviceWaterAreaCode: '61030401001',
-        EditTime: '2021-01-27T01:01:36.000Z',
-        Id: '2747e798b59e432bac1ffc4d4edc9e1a',
+        DeviceWaterAreaCode: '',
+        EditTime: '',
+        Id: '',
         Imei: '',
-        InstallAddress: '陕西省宝鸡市渭滨区马营镇冷沟',
-        InstallTime: '2021-01-27T00:58:00.000Z',
+        InstallAddress: '',
+        InstallTime: '',
         IpPort: '',
-        Latitude: 34.212775,
-        Longitude: 107.262388,
+        Latitude: 0,
+        Longitude: 0,
         MonitorArea: '',
         OwnerName: '',
         OwnerTelphone: '',
         PhotoAfter: '',
         PhotoBefore: '',
-        SimCard: '18393785857',
-        SimOperator: '中国移动',
+        SimCard: '',
+        SimOperator: '',
         WaterAreaId: '174b014cad674b558d86b50e85453ec6',
-        ApplyStatus: '停用',
+        ApplyStatus: '',
         DevicePlate: '',
         GroundWaterDepth: 0,
         IndustryApprovedWater: 0,
         IndustryArea: 0,
         IndustryProductionCapacity: 0,
-        IrrigationAreaType: '井灌区',
-        IrrigationMode: '井灌',
+        IrrigationAreaType: '',
+        IrrigationMode: '',
         IsHandleDocument: 0,
         IsIndustryProcedure: 0,
         KZArea: 0,
-        LandformType: '火山地貌',
-        MakeTime: '2018-08-24T01:00:02.000Z',
+        LandformType: '',
+        MakeTime: '',
         MeterCaliber: 0,
         MeterGuard: 0,
         MeterSerialNo: '',
         MeterType: '',
         Note: '',
         PipeDiameter: 0,
-        PumpMaterial: '普通碳钢管',
+        PumpMaterial: '',
         RatedFlow: 0,
         RatedHead: 0,
         RatedPower: 0,
         SJArea: 200,
         SJSupplyWaterPeople: 0,
-        UseWaterType: '地表水',
+        UseWaterType: '',
         WaterArea: '',
         WaterIntakeNo: '',
         WaterMeterMeasurement: 0,
-        WaterMeterMeasurementType: '脉冲水表计量',
+        WaterMeterMeasurementType: '',
         WaterPumpNo: '',
         WellDepth: 0,
         WellDiameter: 0,
-        WellUse: '灌溉',
-        YearWaterSum: 0,
+        WellUse: '',
+        YearWaterSum: 0
       },
-      headers:{Authorization:''}
+      headerBefore: { Authorization: '', type: 'before' },
+      headerAfter: { Authorization: '', type: 'after' },
+      previewDialogVisible: false,
+      imageUrl: '',
+      rules: [v => !!v || '必填区域'],
+      valid: false
     }
   },
-  computed: {},
   created() {
     this.$store.dispatch(GETAREAS)
   },
   mounted() {
     this.getData()
-    this.headers.Authorization=window.sessionStorage.getItem('token')
+    this.headerBefore.Authorization = window.sessionStorage.getItem('token')
+    this.headerAfter.Authorization = window.sessionStorage.getItem('token')
     window.addEventListener('scroll', this.addFixed)
   },
   destroyed() {
     window.removeEventListener('scroll', this.addFixed)
   },
   methods: {
-    handleSuccess(r,f,fl){
-      console.log(r)
-      console.log(f)
-      console.log(fl)
+    handleSuccess(res) {
+      if (res.meta.status !== 200) {
+        this.$message.error('上传失败，请再次尝试')
+      } else {
+        this.$message.success('上传成功')
+        if (res.data.type === 'before') {
+          this.extendedWellInfo.PhotoBefore = res.data.filePath
+        } else {
+          this.extendedWellInfo.PhotoAfter = res.data.filePath
+        }
+      }
     },
-    submitUpload(){
-      this.$refs.img_upload.submit()
-
-    },
-    handleRemove(file, fileList) {
-      console.log(file, fileList);
+    submitUpload() {
+      this.$refs.img_upload_before.submit()
+      this.$refs.img_upload_after.submit()
     },
     handlePreview(file) {
-      console.log(file);
+      this.previewDialogVisible = true
+
+      this.imageUrl = file.url
     },
     async getData() {
       // get area info
       this.areas = this.$store.getters.getAreas
+
       //设备型号
       this.deviceModel = await http('get', '/api/basicInfo/sysdevicemodel')
       //泵管材质 pumpMaterial
@@ -709,25 +769,32 @@ export default {
       //水井用途
       this.wellUse = await http('get', '/api/basicInfo/syswelluse')
       //灌溉模式irrigationMode
-      this.irrigationMode = await http('get', '/api/basicInfo/sysirrigationmode')
+      this.irrigationMode = await http(
+        'get',
+        '/api/basicInfo/sysirrigationmode'
+      )
       //水量计量设施类型：
       this.measureType = await http('get', '/api/basicInfo/sysmeasuretype')
       //地貌类型landFormType
       this.landFormType = await http('get', '/api/basicInfo/syslandformtype')
-//
-      this.irrigationAreaType = await http('get', '/api/basicInfo/sysirrigationareatype')
+      //
+      this.irrigationAreaType = await http(
+        'get',
+        '/api/basicInfo/sysirrigationareatype'
+      )
     },
-    handleSelectChange(e,k) {
-      console.log(e)
-      console.log(k)
+    handleSelectChange() {
       this.extendedWellInfo.AreaId = this.areaSelected
     },
     async handleSubmit() {
+      const valid = this.$refs.add_well_form.validate()
+      if (!valid) {
+        return this.$message.error('请填写所有必填区域')
+      }
       const { data: res } = await this.$http.post(
         '/api/addWell',
         this.extendedWellInfo
       )
-
       if (res.meta.status !== 200) {
         return this.$message.error(res.meta.msg)
       }
@@ -736,7 +803,7 @@ export default {
       this.$confirm('是否继续添加新的机井?', '提示', {
         confirmButtonText: '继续添加',
         cancelButtonText: '取消',
-        type: 'warning',
+        type: 'warning'
       })
         .then(() => {})
         .catch(() => {
@@ -748,8 +815,8 @@ export default {
     },
     handleGoBack() {
       this.$router.push('/baseDeviceInfo/index.do')
-    },
-  },
+    }
+  }
 }
 </script>
 
@@ -764,6 +831,13 @@ export default {
       h3 {
         margin: 0 auto;
       }
+    }
+  }
+
+  .el-dialog {
+    img {
+      height: 100%;
+      width: 100%;
     }
   }
 

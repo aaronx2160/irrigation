@@ -10,7 +10,7 @@ import {
   GETMENULIST,
   GETROLELIST,
   GETWATERAREAS,
-  GETWELLLIST,
+  GETWELLLIST
 } from './types'
 
 Vue.use(Vuex)
@@ -26,7 +26,7 @@ export default new Vuex.Store({
     roleList: [],
     wellList: [],
     waterAreas: [],
-    disabled: false,
+    disabled: false
   },
   getters: {
     getUser(state) {
@@ -52,7 +52,7 @@ export default new Vuex.Store({
     },
     getDisabled(state) {
       return state.disabled
-    },
+    }
   },
   mutations: {
     [CHANGEUSR](state, user) {
@@ -79,7 +79,7 @@ export default new Vuex.Store({
     },
     [GETDISABLED](state, disabled) {
       state.disabled = disabled
-    },
+    }
   },
   actions: {
     async changeUser(context, payload) {
@@ -90,7 +90,7 @@ export default new Vuex.Store({
         context.commit(CHANGEUSR, res.data)
         return {
           msg: '登录成功',
-          token: res.data.token,
+          token: res.data.token
         }
       }
     },
@@ -137,6 +137,6 @@ export default new Vuex.Store({
       setTimeout(() => {
         context.commit(GETDISABLED, false)
       }, 5000)
-    },
-  },
+    }
+  }
 })

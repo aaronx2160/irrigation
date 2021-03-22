@@ -284,7 +284,7 @@ export default {
       queryInfo: {
         query: '',
         pagenum: 1,
-        pagesize: 2,
+        pagesize: 2
       },
       userList: [],
       total: 0,
@@ -300,69 +300,69 @@ export default {
         Mobile: '',
         Email: '',
         Address: '',
-        Remark: '',
+        Remark: ''
       },
       addFormRules: {
         UserCode: [
           {
             required: true,
             message: '请填写用户编码',
-            trigger: 'blur',
-          },
+            trigger: 'blur'
+          }
         ],
 
         UserName: [
           {
             required: true,
             message: '请输入用户名',
-            trigger: 'blur',
+            trigger: 'blur'
           },
           {
             min: 5,
             max: 15,
             message: '用户名的字数在5-15个字符',
-            trigger: 'blur',
-          },
+            trigger: 'blur'
+          }
         ],
         UserPassword: [
           {
             required: true,
             message: '请输入密码',
-            trigger: 'blur',
+            trigger: 'blur'
           },
           {
             min: 6,
             max: 15,
             message: '用户名的字数在6-15个字符',
-            trigger: 'blur',
-          },
+            trigger: 'blur'
+          }
         ],
         Email: [
           {
             validator: checkEmail,
             message: '请输入合法邮箱',
-            trigger: 'blur',
-          },
+            trigger: 'blur'
+          }
         ],
         Mobile: [
           {
             required: true,
             message: '请输入手机号',
-            trigger: 'blur',
+            trigger: 'blur'
           },
           {
             validator: checkMobile,
             message: '请输入合法手机号',
-            trigger: 'blur',
-          },
-        ],
+            trigger: 'blur'
+          }
+        ]
       },
       editDialogVisible: false,
       userToEdit: {},
       roleAllotDialogVisible: false,
       userToAllot: {},
       roleSelected: '',
-      rightsAllotDialogVisible: false,
+      rightsAllotDialogVisible: false
     }
   },
   created() {
@@ -378,7 +378,7 @@ export default {
         return this.$message.error('数据获取失败')
       }
       console.log(res.data)
-      res.data.forEach((item) => {
+      res.data.forEach(item => {
         item.AuditFlag = item.AuditFlag !== 0
       })
       this.userList = res.data
@@ -393,11 +393,11 @@ export default {
     },
     async userStateChange(id, AuditFlag) {
       const { data: res } = await this.$http.put(`/api/user/${id}`, {
-        userstate: AuditFlag,
+        userstate: AuditFlag
       })
       console.log(res)
       if (res.meta.status !== 200) {
-        this.userList.forEach((v) => {
+        this.userList.forEach(v => {
           if (v.Id === id) {
             v.AuditFlag = !AuditFlag
           }
@@ -410,7 +410,7 @@ export default {
       this.$refs.addFormRef.resetFields()
     },
     addUser() {
-      this.$refs.addFormRef.validate(async (valid) => {
+      this.$refs.addFormRef.validate(async valid => {
         if (!valid) return
         if (this.province === '陕西省') {
           this.province = 1
@@ -442,7 +442,7 @@ export default {
       this.$refs.editFormRef.resetFields()
     },
     editUser() {
-      this.$refs.editFormRef.validate(async (valid) => {
+      this.$refs.editFormRef.validate(async valid => {
         if (!valid) {
           return
         }
@@ -451,7 +451,7 @@ export default {
           `users/${this.userToEdit.id}`,
           {
             email,
-            mobile,
+            mobile
           }
         )
         if (res.meta.status !== 200) return this.$message.error('修改用户失败')
@@ -467,9 +467,9 @@ export default {
         {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
-          type: 'warning',
+          type: 'warning'
         }
-      ).catch((err) => err)
+      ).catch(err => err)
 
       if (confirmRes !== 'confirm') return this.$message.info('已取消删除')
       const { data: res } = await this.$http.delete(`/api/user/${id}`)
@@ -482,15 +482,15 @@ export default {
       const rid = this.roleSelected
       const { data: res } = await this.$http.put(`users/${id}/role`, {
         id,
-        rid,
+        rid
       })
       if (res.meta.status !== 200)
         return this.$message.error('重新分配角色失败')
       this.roleAllotDialogVisible = false
       await this.getUserList()
       this.$message.success('已重新分配角色')
-    },
-  },
+    }
+  }
 }
 </script>
 

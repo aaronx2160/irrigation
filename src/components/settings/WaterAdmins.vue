@@ -170,7 +170,7 @@ export default {
         district: '',
         waterAdmin: '',
         areaCode: '',
-        remark: '',
+        remark: ''
       },
       waterAreaEditForm: {
         province: '陕西省',
@@ -178,10 +178,10 @@ export default {
         district: '',
         admin: '',
         areaCode: '',
-        remark: '',
+        remark: ''
       },
       addWaterAreaDialogVisible: false,
-      editRegionDialogVisible: false,
+      editRegionDialogVisible: false
     }
   },
   mounted() {
@@ -228,9 +228,9 @@ export default {
       this.$confirm('此操作将永久删除该区域, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
-        type: 'warning',
+        type: 'warning'
       })
-        .then(async (value) => {
+        .then(async value => {
           if (value === 'confirm') {
             const { data: res } = await this.$http.delete(
               '/api/waterArea/' + id
@@ -243,19 +243,19 @@ export default {
             }
           }
         })
-        .catch((err) => {
+        .catch(err => {
           if (err) return this.$message.error('已取消删除水管区域')
         })
     },
     handleProvinceChange(value) {
       this.citySelected = ''
-      const provinceSelected = this.provinces.filter((item) => {
+      const provinceSelected = this.provinces.filter(item => {
         return item.value === value
       })
       this.cities = provinceSelected[0].children
       this.citySelected = this.cities[0].label
-    },
-  },
+    }
+  }
 }
 </script>
 

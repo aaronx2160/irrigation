@@ -1,6 +1,7 @@
 <template>
   <div>
     <el-button @click="getData">Get Data</el-button>
+    <img src="/api/public/uploads/1616289143508.png" alt="" />
     <!--    <el-button @click="handleClick">DeleteData</el-button>-->
   </div>
 </template>
@@ -18,11 +19,11 @@ export default {
       this.menuList = await http('get', '/api/menu/3', null)
       const menuArr = []
       const arrTemp = this.menuList.slice(0)
-      arrTemp.map((item) => {
+      arrTemp.map(item => {
         item.children = []
       })
       for (let i = 0; i < arrTemp.length; i++) {
-        arrTemp.map((item) => {
+        arrTemp.map(item => {
           if (arrTemp[i].ParentMenuId === item.MenuCode) {
             item.children.push(arrTemp[i])
           }
@@ -31,8 +32,8 @@ export default {
           menuArr.push(arrTemp[i])
         }
       }
-    },
-  },
+    }
+  }
 }
 </script>
 

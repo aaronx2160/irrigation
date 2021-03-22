@@ -45,18 +45,18 @@ export default {
       options: [
         {
           value: 'year',
-          label: '年',
+          label: '年'
         },
         {
           value: 'month',
-          label: '月',
+          label: '月'
         },
         {
           value: 'day',
-          label: '日',
-        },
+          label: '日'
+        }
       ],
-      value: 'day',
+      value: 'day'
     }
   },
   mounted() {
@@ -73,12 +73,12 @@ export default {
           left: '5%',
           right: '5%',
           bottom: '5%',
-          containLabel: true,
+          containLabel: true
         },
         tooltip: { show: true },
         xAxis: { type: 'category' },
         yAxis: { type: 'value' },
-        series: [{ type: 'bar' }],
+        series: [{ type: 'bar' }]
       }
       this.chartInstance.setOption(initOption)
       // this.chartInstance.on('mouseover', () => {
@@ -87,8 +87,8 @@ export default {
       // this.chartInstance.on('mouseout', () => {
       //     this.startInterval()
       // })
-    },
-  },
+    }
+  }
 }
 </script>
 

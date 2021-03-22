@@ -69,23 +69,23 @@ export default {
           region: '甘州区',
           threeLinePolicy: '1.5亿吨',
           waterUsed: '0.0吨',
-          balance: '150000000.00吨',
-        },
+          balance: '150000000.00吨'
+        }
       ],
       efficiencyRedLine: [
         {
           currentEfficiency: 125,
-          lowestEffAllowed: 5000,
-        },
+          lowestEffAllowed: 5000
+        }
       ],
       pollutionDischargeRedLine: [
         {
           currentDischarge: 125,
-          dischargeLimit: 5000,
-        },
-      ],
+          dischargeLimit: 5000
+        }
+      ]
     }
-  },
+  }
 }
 </script>
 

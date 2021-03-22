@@ -44,24 +44,24 @@ export default {
       undergroundWaterLevel: [
         {
           stationName: '站点1:',
-          waterLevel: 540.47,
+          waterLevel: 540.47
         },
         {
           stationName: '站点1:',
-          waterLevel: 540.47,
+          waterLevel: 540.47
         },
         {
           stationName: '站点1:',
-          waterLevel: 540.47,
-        },
+          waterLevel: 540.47
+        }
       ],
       regionalWaterUsage: [
         { region: '城区用水量', usage: '0.00吨' },
         { region: '城区用水量', usage: '0.00吨' },
         { region: '城区用水量', usage: '0.00吨' },
         { region: '城区用水量', usage: '0.00吨' },
-        { region: '城区用水量', usage: '0.00吨' },
-      ],
+        { region: '城区用水量', usage: '0.00吨' }
+      ]
     }
   },
   mounted() {
@@ -74,19 +74,19 @@ export default {
         title: { text: '月用水量' },
         tooltip: {},
         xAxis: {
-          data: ['1月', '2月', '3月', '4月', '5月', '6月'],
+          data: ['1月', '2月', '3月', '4月', '5月', '6月']
         },
         yAxis: {},
         series: [
           {
             name: '用水量：吨',
             type: 'bar',
-            data: [5, 20, 36, 10, 10, 20],
-          },
-        ],
+            data: [5, 20, 36, 10, 10, 20]
+          }
+        ]
       })
-    },
-  },
+    }
+  }
 }
 </script>
 

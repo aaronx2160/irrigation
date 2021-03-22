@@ -16,13 +16,13 @@ import 'nprogress/nprogress.css'
 
 import axios from 'axios'
 // axios.defaults.baseURL = 'localhost:5000'
-axios.interceptors.request.use((config) => {
+axios.interceptors.request.use(config => {
   NProgress.start()
   config.headers.Authorization = window.sessionStorage.getItem('token')
   return config
 })
 
-axios.interceptors.response.use((config) => {
+axios.interceptors.response.use(config => {
   NProgress.done()
   if (config.data.meta.msg === 'invalidToken') {
     window.sessionStorage.clear()
@@ -43,5 +43,5 @@ new Vue({
   router,
   store,
   vuetify,
-  render: (h) => h(App),
+  render: h => h(App)
 }).$mount('#app')

@@ -146,34 +146,34 @@ export default {
         roleName: '',
         roleDesc: '',
         roleCode: '',
-        parentCode: '',
+        parentCode: ''
       },
       addRoleRules: {
         roleName: [
           {
             required: true,
             message: 'role name is required',
-            trigger: 'blur',
-          },
+            trigger: 'blur'
+          }
         ],
         roleCode: [
           {
             required: true,
             message: 'role code is required',
-            trigger: 'blur',
-          },
-        ],
+            trigger: 'blur'
+          }
+        ]
       },
       roleToEdit: {},
       rightsTree: [],
       treeProps: {
         label: 'MenuName',
         children: 'children',
-        id: 'Id',
+        id: 'Id'
       },
       defKeys: [],
       roleNameToAddRights: '',
-      roleCodeToAddRights: '',
+      roleCodeToAddRights: ''
     }
   },
   created() {
@@ -191,7 +191,7 @@ export default {
       this.$refs.AddRoleForm.resetFields()
     },
     addRole() {
-      this.$refs.AddRoleForm.validate(async (valid) => {
+      this.$refs.AddRoleForm.validate(async valid => {
         if (!valid) return
         this.rolesToAdd.parentCode = this.$store.state.user.rid
         const { data: res } = await this.$http.post(
@@ -213,13 +213,13 @@ export default {
       this.editDialogVisible = true
     },
     editRole() {
-      this.$refs.EditRoleForm.validate(async (valid) => {
+      this.$refs.EditRoleForm.validate(async valid => {
         if (!valid) return
         const { Id, RoleName, Remark, RoleCode } = this.roleToEdit
         const { data: res } = await this.$http.put(`/api/roles/${Id}`, {
           RoleName,
           Remark,
-          RoleCode,
+          RoleCode
         })
         if (res.meta.status !== 200) return this.$message.error('编辑角色失败')
         this.editDialogVisible = false
@@ -234,9 +234,9 @@ export default {
         {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
-          type: 'warning',
+          type: 'warning'
         }
-      ).catch((err) => err)
+      ).catch(err => err)
       if (confirmRes === 'confirm') {
         const { data: res } = await this.$http.delete(`/api/roles/${id}`)
         if (res.meta.status !== 200) return this.$message.error(res.meta.msg)
@@ -254,9 +254,9 @@ export default {
         {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
-          type: 'warning',
+          type: 'warning'
         }
-      ).catch((err) => err)
+      ).catch(err => err)
       if (confirmRes !== 'confirm') return this.$message.info('已取消删除！')
       const { data: res } = await this.$http.delete(
         `roles/${role.id}/rights/${rightId}`
@@ -276,7 +276,7 @@ export default {
       const { data: res } = await this.$http.get('/api/defaultRights/' + roleId)
       if (res.meta.status !== 200)
         return this.$message.error('获取权限已开启权限失败')
-      res.data.map((v) => {
+      res.data.map(v => {
         this.defKeys.push(v.Id)
       })
       this.$refs.rightsTreeRef.setCheckedKeys(this.defKeys)
@@ -285,7 +285,7 @@ export default {
       if (!node.children) {
         return arr.push(node.id)
       }
-      node.children.forEach((item) => this.getLevel3RightsKeys(item, arr))
+      node.children.forEach(item => this.getLevel3RightsKeys(item, arr))
     },
     settingRightDialogClose() {
       this.defKeys = []
@@ -294,19 +294,19 @@ export default {
       const roleCode = this.roleCodeToAddRights
       const keys = [
         ...this.$refs.rightsTreeRef.getCheckedKeys(),
-        ...this.$refs.rightsTreeRef.getHalfCheckedKeys(),
+        ...this.$refs.rightsTreeRef.getHalfCheckedKeys()
       ]
       const keysStr = keys.join(',')
       const { data: res } = await this.$http.post('/api/editRights/', {
         roleCode,
-        menuId: keysStr,
+        menuId: keysStr
       })
 
       if (res.meta.status !== 200) return this.$message.error('分配权限失败')
       this.$message.success('分配权限成功')
       this.settingDialogInvisible = false
-    },
-  },
+    }
+  }
 }
 </script>
 

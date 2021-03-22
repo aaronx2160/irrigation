@@ -137,34 +137,34 @@ export default {
           children: [
             {
               value: '宝鸡市',
-              label: '宝鸡市',
+              label: '宝鸡市'
             },
             {
               value: '西安市',
-              label: '西安市',
-            },
-          ],
+              label: '西安市'
+            }
+          ]
         },
         {
           value: '2021',
-          label: '2021',
+          label: '2021'
         },
         {
           value: '2022',
-          label: '2022',
+          label: '2022'
         },
         {
           value: '2023',
-          label: '2023',
+          label: '2023'
         },
         {
           value: '2024',
-          label: '2024',
+          label: '2024'
         },
         {
           value: '2025',
-          label: '2025',
-        },
+          label: '2025'
+        }
       ],
       cities: [{ value: '', label: '' }],
       provinceSelected: '',
@@ -176,24 +176,19 @@ export default {
           regionLevel: 1,
           parentRegion: '陕西省',
           createdAt: Date.now(),
-          description: '',
-        },
+          description: ''
+        }
       ],
       addRegionDialogVisible: false,
-      editRegionDialogVisible: false,
+      editRegionDialogVisible: false
     }
   },
   created() {
-    console.log('created')
     this.$store.dispatch(GETWELLLIST)
   },
   mounted() {
-    console.log('mounted')
     this.getWellList()
     this.pageData = pageNation(this.wellList, this.pageNum, this.scale).newArr
-  },
-  destroyed() {
-    console.log('destroyed')
   },
   methods: {
     handleAddAWell() {
@@ -210,7 +205,7 @@ export default {
     },
     handleSearch() {
       if (this.searchInput.trim() === '') return
-      return (this.deviceInfo = this.deviceInfo.filter((v) => {
+      return (this.deviceInfo = this.deviceInfo.filter(v => {
         return v.DeviceCode === this.searchInput.trim()
       }))
     },
@@ -219,9 +214,9 @@ export default {
       this.$confirm('此操作将永久删除该机井, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
-        type: 'warning',
+        type: 'warning'
       })
-        .then(async (action) => {
+        .then(async action => {
           if (action === 'confirm') {
             const { data: res } = await this.$http.delete(
               '/api/deleteWell/' + Id
@@ -237,19 +232,19 @@ export default {
             }
           }
         })
-        .catch((err) => {
+        .catch(err => {
           if (err) return this.$message.info('取消删除。')
         })
     },
     handleProvinceChange(value) {
       this.citySelected = ''
-      const provinceSelected = this.provinces.filter((item) => {
+      const provinceSelected = this.provinces.filter(item => {
         return item.value === value
       })
       this.cities = provinceSelected[0].children
       this.citySelected = this.cities[0].label
-    },
-  },
+    }
+  }
 }
 </script>
 

@@ -13,7 +13,7 @@ export default {
       allData: null,
       startValue: 0,
       endValue: 9,
-      timeId: null,
+      timeId: null
     }
   },
   mounted() {
@@ -35,12 +35,12 @@ export default {
           left: '5%',
           right: '5%',
           bottom: '5%',
-          containLabel: true,
+          containLabel: true
         },
         tooltip: { show: true },
         xAxis: { type: 'category' },
         yAxis: { type: 'value' },
-        series: [{ type: 'bar', label: { show: true, position: 'top' } }],
+        series: [{ type: 'bar', label: { show: true, position: 'top' } }]
       }
       this.chartInstance.setOption(initOption)
       this.chartInstance.on('mouseover', () => {
@@ -62,17 +62,17 @@ export default {
       const colorArr = [
         ['#0BA82C', '#4ff778'],
         ['#2e72bf', '#23e5e5'],
-        ['#5052ee', '#ab6ee5'],
+        ['#5052ee', '#ab6ee5']
       ]
       let wellArr = []
       const valueArr = []
-      this.allData = this.allData.filter((v) => {
+      this.allData = this.allData.filter(v => {
         return v.UseWater !== 0
       })
       this.allData.sort((a, b) => {
         return b.UseWater - a.UseWater
       })
-      this.allData.map((v) => {
+      this.allData.map(v => {
         wellArr.push(v.DeviceName)
         valueArr.push(v.UseWater)
       })
@@ -81,13 +81,13 @@ export default {
         dataZoom: {
           show: false,
           startValue: this.startValue,
-          endValue: this.endValue,
+          endValue: this.endValue
         },
         series: [
           {
             data: valueArr,
             itemStyle: {
-              color: (arg) => {
+              color: arg => {
                 let targetColor = null
                 if (arg.value > 1000) {
                   targetColor = colorArr[0]
@@ -98,12 +98,12 @@ export default {
                 }
                 return new this.$echarts.graphic.LinearGradient(0, 0, 0, 1, [
                   { offset: 0, color: targetColor[0] },
-                  { offset: 1, color: targetColor[1] },
+                  { offset: 1, color: targetColor[1] }
                 ])
-              },
-            },
-          },
-        ],
+              }
+            }
+          }
+        ]
       }
       this.chartInstance.setOption(dataOption)
     },
@@ -113,19 +113,19 @@ export default {
       const adapterOption = {
         title: {
           textStyle: {
-            fontSize: 20,
-          },
+            fontSize: 20
+          }
         },
         series: [
           {
             barWidth: titleFontSize,
             itemStyle: {
-              barBorderRadius: function () {
+              barBorderRadius: function() {
                 return [titleFontSize / 2, titleFontSize / 2, 0, 0]
-              },
-            },
-          },
-        ],
+              }
+            }
+          }
+        ]
       }
       this.chartInstance.setOption(adapterOption)
       this.chartInstance.resize()
@@ -143,8 +143,8 @@ export default {
         }
         this.updateChart()
       }, 2000)
-    },
-  },
+    }
+  }
 }
 </script>
 

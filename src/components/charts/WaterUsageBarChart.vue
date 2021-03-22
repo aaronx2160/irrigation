@@ -38,12 +38,12 @@ export default {
       areaList: [],
       filterForm: {
         DeviceCode: '',
-        villageName: '',
+        villageName: ''
       },
       chartInstance: null,
       allData: null,
       currentMonth: 0,
-      monthArr: [],
+      monthArr: []
     }
   },
   methods: {
@@ -61,13 +61,13 @@ export default {
             type: 'bar',
             label: {
               show: true,
-              position: 'top',
+              position: 'top'
             },
             itemStyle: {
-              color: '#019F89',
-            },
-          },
-        ],
+              color: '#019F89'
+            }
+          }
+        ]
       }
       this.chartInstance.setOption(initOption)
       this.getData()
@@ -93,13 +93,13 @@ export default {
       const dataOption = {
         series: [
           {
-            data: dataArr,
-          },
-        ],
+            data: dataArr
+          }
+        ]
       }
       this.chartInstance.setOption(dataOption)
-    },
-  },
+    }
+  }
 }
 </script>
 

@@ -106,16 +106,16 @@ export default {
       provinces: [
         {
           value: '灌溉',
-          label: '灌溉',
+          label: '灌溉'
         },
         {
           value: '工业',
-          label: '工业',
+          label: '工业'
         },
         {
           value: '生活',
-          label: '生活',
-        },
+          label: '生活'
+        }
       ],
       cities: [{ value: '', label: '' }],
       provinceSelected: '',
@@ -127,11 +127,11 @@ export default {
           regionLevel: 1,
           parentRegion: '陕西省',
           createdAt: Date.now(),
-          description: '',
-        },
+          description: ''
+        }
       ],
       addPowerSettingVisible: false,
-      editRegionDialogVisible: false,
+      editRegionDialogVisible: false
     }
   },
   methods: {
@@ -139,18 +139,18 @@ export default {
       this.$confirm('此操作将永久删除该区域, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
-        type: 'warning',
+        type: 'warning'
       })
     },
     handleProvinceChange(value) {
       this.citySelected = ''
-      const provinceSelected = this.provinces.filter((item) => {
+      const provinceSelected = this.provinces.filter(item => {
         return item.value === value
       })
       this.cities = provinceSelected[0].children
       this.citySelected = this.cities[0].label
-    },
-  },
+    }
+  }
 }
 </script>
 

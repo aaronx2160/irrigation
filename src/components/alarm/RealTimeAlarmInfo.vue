@@ -116,60 +116,60 @@ export default {
       options: [
         {
           value: '2020',
-          label: '2020',
+          label: '2020'
         },
         {
           value: '2021',
-          label: '2021',
+          label: '2021'
         },
         {
           value: '2022',
-          label: '2022',
+          label: '2022'
         },
         {
           value: '2023',
-          label: '2023',
+          label: '2023'
         },
         {
           value: '2024',
-          label: '2024',
+          label: '2024'
         },
         {
           value: '2025',
-          label: '2025',
-        },
+          label: '2025'
+        }
       ],
       options2: [
         {
           value: '水泵异常',
-          label: '水泵异常',
+          label: '水泵异常'
         },
         {
           value: '水表异常',
-          label: '水表异常',
+          label: '水表异常'
         },
         {
           value: '电表异常',
-          label: '电表异常',
+          label: '电表异常'
         },
         {
           value: '语音模块异常',
-          label: '语音模块异常',
+          label: '语音模块异常'
         },
         {
           value: '开关门异常',
-          label: '开关门异常',
+          label: '开关门异常'
         },
         {
           value: '三相电压不平衡异常',
-          label: '三相电压不平衡异常',
-        },
+          label: '三相电压不平衡异常'
+        }
       ],
       value: '',
       value2: '',
-      alarmDialogVisible: false,
+      alarmDialogVisible: false
     }
-  },
+  }
 }
 </script>
 

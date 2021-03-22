@@ -444,7 +444,7 @@ export default {
       selectCats: [
         { label: '网络状态', value: 'NetState' },
         { label: '水泵状态', value: 'PumpState' },
-        { label: '上卡状态', value: 'CardState' },
+        { label: '上卡状态', value: 'CardState' }
       ],
       catSelected: '',
       status: [
@@ -452,14 +452,14 @@ export default {
           NetStateLabel: '在线',
           PumpStateLabel: '开启',
           CardStateLabel: '上卡',
-          value: 1,
+          value: 1
         },
         {
           NetStateLabel: '离线',
           PumpStateLabel: '关闭',
           CardStateLabel: '下卡',
-          value: 0,
-        },
+          value: 0
+        }
       ],
       statusSelected: null,
       searchBy: { DeviceCode: '', DeviceName: '' },
@@ -468,7 +468,7 @@ export default {
       wellDetailDialogData: {},
       wellDetailDialogNavActive: true,
       wellDetailDialogWaterUseHistoryData: null,
-      wellDetailDialogHistoryPageData: null,
+      wellDetailDialogHistoryPageData: null
     }
   },
   mounted() {
@@ -490,7 +490,7 @@ export default {
     handleStatusSelectChange() {
       let that = this
       const dataToFilter = this.wellList.slice(0)
-      this.wellListFiltered = dataToFilter.filter((value) => {
+      this.wellListFiltered = dataToFilter.filter(value => {
         return value[that.catSelected] === that.statusSelected
       })
       this.filterOn = true
@@ -520,7 +520,7 @@ export default {
       let flag =
         this.searchBy.DeviceCode.trim() === '' ? 'DeviceName' : 'DeviceCode'
       const dataToFilter = this.wellList.slice(0)
-      this.wellListFiltered = dataToFilter.filter((v) => {
+      this.wellListFiltered = dataToFilter.filter(v => {
         return v[flag] === this.searchBy[flag]
       })
       this.filterOn = true
@@ -566,8 +566,8 @@ export default {
       this.wellDetailDialogOPen = false
       this.wellDetailDialogNavActive = true
       this.wellDetailDialogHistoryPageData = null
-    },
-  },
+    }
+  }
 }
 </script>
 

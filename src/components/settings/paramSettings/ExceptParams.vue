@@ -125,16 +125,16 @@ export default {
       provinces: [
         {
           value: '陕西',
-          label: '陕西',
+          label: '陕西'
         },
         {
           value: '山西',
-          label: '山西',
+          label: '山西'
         },
         {
           value: '河南',
-          label: '河南',
-        },
+          label: '河南'
+        }
       ],
       cities: [{ value: '', label: '' }],
       provinceSelected: '',
@@ -146,11 +146,11 @@ export default {
           regionLevel: 1,
           parentRegion: '陕西省',
           createdAt: Date.now(),
-          description: '',
-        },
+          description: ''
+        }
       ],
       addExceptParamsVisible: false,
-      editRegionDialogVisible: false,
+      editRegionDialogVisible: false
     }
   },
   methods: {
@@ -158,18 +158,18 @@ export default {
       this.$confirm('此操作将永久删除该区域, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
-        type: 'warning',
+        type: 'warning'
       })
     },
     handleProvinceChange(value) {
       this.citySelected = ''
-      const provinceSelected = this.provinces.filter((item) => {
+      const provinceSelected = this.provinces.filter(item => {
         return item.value === value
       })
       this.cities = provinceSelected[0].children
       this.citySelected = this.cities[0].label
-    },
-  },
+    }
+  }
 }
 </script>
 

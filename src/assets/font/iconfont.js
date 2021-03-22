@@ -1,4 +1,4 @@
-!(function (c) {
+!(function(c) {
   var l,
     a,
     i,
@@ -23,7 +23,7 @@
   function s() {
     o || ((o = !0), i())
   }
-  ;(l = function () {
+  ;(l = function() {
     var c, l, a, i
     ;((i = document.createElement('div')).innerHTML = e),
       (e = null),
@@ -41,7 +41,7 @@
     document.addEventListener
       ? ~['complete', 'loaded', 'interactive'].indexOf(document.readyState)
         ? setTimeout(l, 0)
-        : ((a = function () {
+        : ((a = function() {
             document.removeEventListener('DOMContentLoaded', a, !1), l()
           }),
           document.addEventListener('DOMContentLoaded', a, !1))
@@ -49,7 +49,7 @@
         ((i = l),
         (t = c.document),
         (o = !1),
-        (h = function () {
+        (h = function() {
           try {
             t.documentElement.doScroll('left')
           } catch (c) {
@@ -57,7 +57,7 @@
           }
           s()
         })(),
-        (t.onreadystatechange = function () {
+        (t.onreadystatechange = function() {
           'complete' == t.readyState && ((t.onreadystatechange = null), s())
         }))
 })(window)

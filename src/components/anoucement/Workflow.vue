@@ -19,13 +19,13 @@ export default {
   data() {
     return {
       editor: null,
-      editorData: '',
+      editorData: ''
     }
   },
   mounted() {
     const editor = new E('#editor')
 
-    editor.config.onchange = (newHTML) => {
+    editor.config.onchange = newHTML => {
       this.editorData = newHTML
     }
     editor.create()
@@ -35,12 +35,12 @@ export default {
     getEditorData() {
       let data = this.editor.txt.html()
       alert(data)
-    },
+    }
   },
   beforeDestroy() {
     this.editor.destroy()
     this.editor = null
-  },
+  }
 }
 </script>
 

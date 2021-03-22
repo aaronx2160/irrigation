@@ -35,15 +35,15 @@ export default {
         delivery: false,
         type: [],
         resource: '',
-        desc: '',
-      },
+        desc: ''
+      }
     }
   },
   methods: {
     onSubmit() {
       console.log('submit!')
-    },
-  },
+    }
+  }
 }
 </script>
 
