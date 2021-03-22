@@ -70,36 +70,41 @@
         label-position="left"
         ref="areaAddForm"
         :model="areaAddForm"
+        :rules="rules"
       >
-        <el-form-item label="省:">
+        <el-form-item label="省:" prop="province">
           <el-input
             size="mini"
             v-model="areaAddForm.province"
             disabled
           ></el-input>
         </el-form-item>
-        <el-form-item label="市:">
+        <el-form-item label="市:" prop="city">
           <el-input size="mini" v-model="areaAddForm.city" disabled></el-input>
         </el-form-item>
-        <el-form-item label="区(县):">
+        <el-form-item label="区(县):" prop="district">
           <el-input size="mini" v-model="areaAddForm.district"></el-input>
         </el-form-item>
-        <el-form-item label="乡镇:">
+        <el-form-item label="乡镇:" prop="town">
           <el-input size="mini" v-model="areaAddForm.town"></el-input>
         </el-form-item>
-        <el-form-item label="村:">
+        <el-form-item label="村:" prop="village">
           <el-input size="mini" v-model="areaAddForm.village"></el-input>
         </el-form-item>
-        <el-form-item label="区域编码:">
+        <el-form-item label="区域编码:" prop="areaCode">
           <el-input size="mini" v-model="areaAddForm.areaCode"></el-input>
         </el-form-item>
-        <el-form-item label="备注:">
+        <el-form-item label="备注:" prop="remark">
           <el-input type="textarea" v-model="areaAddForm.remark"></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="addAreaDialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="handleAddArea">确 定</el-button>
+        <el-button size="mini" @click="addAreaDialogVisible = false"
+          >取 消</el-button
+        >
+        <el-button size="mini" type="primary" @click="handleAddArea"
+          >确 定</el-button
+        >
       </span>
     </el-dialog>
     <el-dialog
@@ -112,44 +117,50 @@
         label-position="left"
         ref="areaEditForm"
         :model="areaEditForm"
+        :rules="rules"
       >
-        <el-form-item label="省:">
+        <el-form-item label="省:" prop="province">
           <el-input
             size="mini"
             v-model="areaEditForm.province"
             disabled
           ></el-input>
         </el-form-item>
-        <el-form-item label="市:">
+        <el-form-item label="市:" prop="city">
           <el-input size="mini" v-model="areaEditForm.city" disabled></el-input>
         </el-form-item>
-        <el-form-item label="区(县):">
+        <el-form-item label="区(县):" prop="district">
           <el-input size="mini" v-model="areaEditForm.district"></el-input>
         </el-form-item>
-        <el-form-item label="乡镇:">
+        <el-form-item label="乡镇:" prop="town">
           <el-input size="mini" v-model="areaEditForm.town"></el-input>
         </el-form-item>
-        <el-form-item label="村:">
+        <el-form-item label="村:" prop="village">
           <el-input size="mini" v-model="areaEditForm.village"></el-input>
         </el-form-item>
-        <el-form-item label="区域编码:">
+        <el-form-item label="区域编码:" prop="areaCode">
           <el-input size="mini" v-model="areaEditForm.areaCode"></el-input>
         </el-form-item>
-        <el-form-item label="备注:">
+        <el-form-item label="备注:" prop="remark">
           <el-input type="textarea" v-model="areaEditForm.remark"></el-input>
         </el-form-item>
       </el-form>
 
       <span slot="footer" class="dialog-footer">
-        <el-button @click="editRegionDialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="handleEditSubmit">确 定</el-button>
+        <el-button size="mini" @click="editRegionDialogVisible = false"
+          >取 消</el-button
+        >
+        <el-button size="mini" type="primary" @click="handleEditSubmit"
+          >确 定</el-button
+        >
       </span>
     </el-dialog>
   </div></template
 >
 
 <script>
-import { GETAREAS } from '../../store/types'
+import { GETAREAS } from '@/store/types'
+import rules from '@/utils/rules'
 
 export default {
   data() {
@@ -173,6 +184,15 @@ export default {
         areaCode: '',
         remark: ''
       },
+      rules: {
+        province: [rules.required],
+        city: [rules.required],
+        district: [rules.required],
+        town: [rules.required],
+        village: [rules.required],
+        areaCode: [rules.required]
+      },
+
       addAreaDialogVisible: false,
       editRegionDialogVisible: false
     }
@@ -187,6 +207,10 @@ export default {
       })
     },
     async handleAddArea() {
+      const valid = await this.$refs.areaAddForm.validate()
+      if (!valid) {
+        return this.$message.error('请填写必填区域。')
+      }
       const { data: res } = await this.$http.post(
         '/api/addArea',
         this.areaAddForm
@@ -205,6 +229,10 @@ export default {
       this.areaEditForm = JSON.parse(JSON.stringify(itemToEdit))
     },
     async handleEditSubmit() {
+      const valid = await this.$refs.areaEditForm.validate()
+      if (!valid) {
+        return this.$message.error('请填写必填区域。')
+      }
       const { data: res } = await this.$http.put(
         '/api/editArea',
         this.areaEditForm

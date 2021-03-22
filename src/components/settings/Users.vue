@@ -50,10 +50,10 @@
             <td>{{ user.Remark }}</td>
             <td>
               <el-switch
-                v-model="user.AuditFlag"
+                v-model="user.IsActive"
                 active-color="#13ce66"
                 inactive-color="#ff4949"
-                @change="userStateChange(user.Id, user.AuditFlag)"
+                @change="userStateChange(user.Id, user.IsActive)"
               >
               </el-switch>
             </td>
@@ -365,7 +365,7 @@ export default {
       rightsAllotDialogVisible: false
     }
   },
-  created() {
+  mounted() {
     this.getUserList()
     this.roleList = this.$store.getters.getRoleList
     this.areas = this.$store.getters.getAreas
@@ -377,9 +377,8 @@ export default {
       if (res.meta.status !== 200) {
         return this.$message.error('数据获取失败')
       }
-      console.log(res.data)
       res.data.forEach(item => {
-        item.AuditFlag = item.AuditFlag !== 0
+        item.IsActive = item.IsActive !== 0
       })
       this.userList = res.data
     },
@@ -391,15 +390,14 @@ export default {
       this.queryInfo.pagenum = newPage
       this.getUserList(this.queryInfo)
     },
-    async userStateChange(id, AuditFlag) {
+    async userStateChange(id, IsActive) {
       const { data: res } = await this.$http.put(`/api/user/${id}`, {
-        userstate: AuditFlag
+        userstate: IsActive
       })
-      console.log(res)
       if (res.meta.status !== 200) {
         this.userList.forEach(v => {
           if (v.Id === id) {
-            v.AuditFlag = !AuditFlag
+            v.IsActive = !IsActive
           }
         })
         return this.$message.error('更新状态失败')

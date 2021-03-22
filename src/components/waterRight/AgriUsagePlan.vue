@@ -87,7 +87,12 @@
               <td>{{ item.DistRatio }}</td>
               <td>{{ item.DistPrice }}</td>
               <td>
-                <el-button type="warning" icon="el-icon-edit" circle></el-button
+                <el-button
+                  type="warning"
+                  icon="el-icon-edit"
+                  @click="editPlanDialogVisible = true"
+                  circle
+                ></el-button
                 ><el-button
                   type="danger"
                   icon="el-icon-delete"
@@ -110,8 +115,15 @@
       :visible.sync="addPlanDialogVisible"
       width="50%"
     >
-      <el-form label-width="auto" :inline="true" label-position="right">
-        <el-form-item label="配水年份：">
+      <el-form
+        :model="addPlanForm"
+        label-width="auto"
+        :inline="true"
+        label-position="right"
+        :rules="rules"
+        ref="add_plan_form"
+      >
+        <el-form-item label="配水年份：" prop="DistYear">
           <el-select
             v-model="addPlanForm.DistYear"
             placeholder="请选择"
@@ -126,14 +138,13 @@
             </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="轮次：">
+        <el-form-item label="轮次：" prop="DistRound">
           <el-input
-            v-model="addPlanForm.DistRound"
-            type="number"
+            v-model.number="addPlanForm.DistRound"
             size="mini"
           ></el-input>
         </el-form-item>
-        <el-form-item label="配水机井：">
+        <el-form-item label="配水机井：" prop="DeviceId">
           <el-select
             v-model="addPlanForm.DeviceId"
             placeholder="请选择"
@@ -148,27 +159,32 @@
             </el-option> </el-select
         ></el-form-item>
 
-        <el-form-item label="每亩地分配水量(吨)：">
-          <el-input size="mini" v-model="addPlanForm.DistWater"></el-input>
-        </el-form-item>
-        <el-form-item label="配水比例：">
+        <el-form-item label="每亩地分配水量(吨)：" prop="DistWater">
           <el-input
-            v-model="addPlanForm.DistRatio"
             size="mini"
-            type="number"
+            v-model.number="addPlanForm.DistWater"
           ></el-input>
         </el-form-item>
-        <el-form-item label="此轮配水价格(￥)：">
+        <el-form-item label="配水比例：" prop="DistRatio">
           <el-input
-            v-model="addPlanForm.DistPrice"
+            v-model.number="addPlanForm.DistRatio"
             size="mini"
-            type="number"
+          ></el-input>
+        </el-form-item>
+        <el-form-item label="此轮配水价格(￥)：" prop="DistPrice">
+          <el-input
+            v-model.number="addPlanForm.DistPrice"
+            size="mini"
           ></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="addPlanDialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="handleAddPlanSubmit">确 定</el-button>
+        <el-button size="mini" @click="addPlanDialogVisible = false"
+          >取 消</el-button
+        >
+        <el-button size="mini" type="primary" @click="handleAddPlanSubmit"
+          >确 定</el-button
+        >
       </span>
     </el-dialog>
     <el-dialog
@@ -176,68 +192,74 @@
       :visible.sync="editPlanDialogVisible"
       width="50%"
     >
-      <el-form label-width="auto" :inline="true" label-position="left">
-        <el-form-item label="配水年份：">
-          <el-select v-model="value" placeholder="请选择">
+      <el-form
+        :model="editPlanForm"
+        label-width="auto"
+        :inline="true"
+        label-position="right"
+        :rules="rules"
+        ref="edit_plan_form"
+      >
+        <el-form-item label="配水年份：" prop="DistYear">
+          <el-select
+            v-model="editPlanForm.DistYear"
+            placeholder="请选择"
+            size="mini"
+          >
             <el-option
-              v-for="item in options"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
+              v-for="item in yearOptions"
+              :key="item"
+              :label="item"
+              :value="item"
             >
             </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="轮次：">
-          <el-select v-model="value" placeholder="请选择">
-            <el-option
-              v-for="item in options"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
-            >
-            </el-option> </el-select
-        ></el-form-item>
-        <el-form-item label="配水机井：">
-          <el-select v-model="value" placeholder="请选择">
-            <el-option
-              v-for="item in options"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
-            >
-            </el-option> </el-select
-        ></el-form-item>
-        <el-form-item label="配水方式：">
-          <el-select v-model="value" placeholder="请选择">
-            <el-option
-              v-for="item in options"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
-            >
-            </el-option> </el-select
-        ></el-form-item>
-        <el-form-item label="每亩地分配水量：">
-          <el-input></el-input>
+        <el-form-item label="轮次：" prop="DistRound">
+          <el-input
+            v-model.number="editPlanForm.DistRound"
+            size="mini"
+          ></el-input>
         </el-form-item>
-        <el-form-item label="配水比例：">
-          <el-select v-model="value" placeholder="请选择">
+        <el-form-item label="配水机井：" prop="DeviceId">
+          <el-select
+            v-model="editPlanForm.DeviceId"
+            placeholder="请选择"
+            size="mini"
+          >
             <el-option
-              v-for="item in options"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
+              v-for="item in wellList"
+              :key="item.id"
+              :label="item.DeviceName"
+              :value="item.DeviceCode"
             >
             </el-option> </el-select
         ></el-form-item>
-        <el-form-item label="此轮配水价格：">
-          <el-input></el-input>
+
+        <el-form-item label="每亩地分配水量(吨)：" prop="DistWater">
+          <el-input
+            size="mini"
+            v-model.number="editPlanForm.DistWater"
+          ></el-input>
+        </el-form-item>
+        <el-form-item label="配水比例：" prop="DistRatio">
+          <el-input
+            v-model.number="editPlanForm.DistRatio"
+            size="mini"
+          ></el-input>
+        </el-form-item>
+        <el-form-item label="此轮配水价格(￥)：" prop="DistPrice">
+          <el-input
+            v-model.number="editPlanForm.DistPrice"
+            size="mini"
+          ></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="editPlanDialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="editPlanDialogVisible = false"
+        <el-button size="mini" @click="editPlanDialogVisible = false"
+          >取 消</el-button
+        >
+        <el-button size="mini" type="primary" @click="handleEditPlanSubmit"
           >确 定</el-button
         >
       </span>
@@ -247,6 +269,7 @@
 
 <script>
 import pageNation from '@/utils/pagenation'
+import rules from '@/utils/rules'
 export default {
   name: 'AgriUsagePlan',
   data() {
@@ -260,12 +283,29 @@ export default {
       wellList: [],
       addPlanForm: {
         DistYear: null,
-        DistRound: 0,
-        DistWater: 0,
-        DistRatio: 0,
-        DistPrice: 0,
+        DistRound: null,
+        DistWater: null,
+        DistRatio: null,
+        DistPrice: null,
         IsAppendWater: 0,
         DeviceId: null
+      },
+      editPlanForm: {
+        DistYear: null,
+        DistRound: null,
+        DistWater: null,
+        DistRatio: null,
+        DistPrice: null,
+        IsAppendWater: 0,
+        DeviceId: null
+      },
+      rules: {
+        DistYear: [rules.required],
+        DistRound: [rules.required, rules.number],
+        DistWater: [rules.required, rules.number],
+        DistRatio: [rules.required, rules.number],
+        DistPrice: [rules.required, rules.number],
+        DeviceId: [rules.required]
       }
     }
   },
@@ -291,17 +331,26 @@ export default {
     },
     getPageData(pageNum) {
       this.pageData = pageNation(this.AgriUsagePlan, pageNum, 10).newArr
-      console.log(this.pageData)
     },
     handlePageChange(e) {
       this.getPageData(e)
     },
-    async handleAddPlanSubmit() {
-      const { data: res } = await this.$http.post(
-        '/api/addWaterPlan',
-        this.addPlanForm
-      )
-      console.log(res)
+    handleAddPlanSubmit() {
+      this.$refs.add_plan_form.validate(async valid => {
+        if (!valid) {
+          return this.$message.error('请安提示要求填写表格')
+        } else {
+          const { data: res } = await this.$http.post(
+            '/api/addWaterPlan',
+            this.addPlanForm
+          )
+          console.log(res)
+        }
+      })
+    },
+    async handleEditPlanSubmit() {
+      const valid = await this.$refs.edit_plan_form.validate()
+      console.log(valid)
     }
   }
 }
