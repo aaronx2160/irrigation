@@ -132,7 +132,7 @@
 </template>
 
 <script>
-import { GETROLELIST } from '../../store/types'
+import { GETROLELIST } from '@/store/types'
 
 export default {
   name: 'Roles',
@@ -198,7 +198,7 @@ export default {
           '/api/roles',
           this.rolesToAdd
         )
-        if (res.meta.status !== 201) return this.$message.error('添加角色失败')
+        if (res.meta.status !== 201) return this.$message.error(res.meta.msg)
         this.$message.success('添加角色成功:)')
         this.getRolesList()
         this.addDialogVisible = false
@@ -221,7 +221,7 @@ export default {
           Remark,
           RoleCode
         })
-        if (res.meta.status !== 200) return this.$message.error('编辑角色失败')
+        if (res.meta.status !== 200) return this.$message.error(res.meta.msg)
         this.editDialogVisible = false
         this.getRolesList()
         this.$message.success('编辑角色成功')
@@ -302,7 +302,7 @@ export default {
         menuId: keysStr
       })
 
-      if (res.meta.status !== 200) return this.$message.error('分配权限失败')
+      if (res.meta.status !== 200) return this.$message.error(res.meta.msg)
       this.$message.success('分配权限成功')
       this.settingDialogInvisible = false
     }

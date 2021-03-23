@@ -66,11 +66,11 @@
                 :enterable="false"
               >
                 <el-button
-                  type="primary"
+                  type="warning"
                   icon="el-icon-edit"
                   size="mini"
                   circle
-                  @click="showEditDialog(scope.row)"
+                  @click="showEditDialog(user)"
                 ></el-button>
               </el-tooltip>
               <el-tooltip
@@ -118,54 +118,45 @@
         ref="addFormRef"
         label-width="110px"
       >
-        <el-form-item label="所属行政区域 " prop="WaterAreaId">
-          <el-select size="mini" v-model="province">
-            <el-option
-              v-for="item in areas"
-              :key="item.id"
-              :label="item.Province"
-              :value="item.id"
-            ></el-option>
-          </el-select>
-          <el-select size="mini" v-model="city">
-            <el-option
-              v-for="item in areas"
-              :key="item.id"
-              :label="item.City"
-              :value="item.id"
-            ></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="所属水管区域" prop="AreaId">
-          <el-select size="mini" v-model="district">
-            <el-option
-              v-for="item in areas"
-              :key="item.id"
-              :label="item.District"
-              :value="item.id"
-            ></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="用户编码" prop="UserCode">
-          <el-input v-model="addForm.UserCode" size="mini"></el-input>
-        </el-form-item>
-        <el-form-item label="角色" prop="Authority">
-          <el-select v-model="roleValue" size="mini">
-            <el-option
-              v-for="item in roleList"
-              :key="item.Id"
-              :label="item.RoleName"
-              :value="item.RoleCode"
-            ></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="登录名称" prop="UserName">
-          <el-input v-model="addForm.UserName" size="mini"></el-input>
-        </el-form-item>
-        <el-form-item label="登录密码" prop="UserPassword">
-          <el-input v-model="addForm.UserPassword" size="mini"></el-input>
-        </el-form-item>
-
+        <el-row>
+          <el-col :span="8">
+            <el-form-item label="所属行政区域 " prop="WaterAreaId">
+              <el-input v-model="area" size="mini" disabled></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item label="所属水管区域" prop="AreaId">
+              <el-input v-model="waterArea" size="mini" disabled></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item label="用户编码" prop="UserCode">
+              <el-input v-model="addForm.UserCode" size="mini"></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-form-item label="角色" prop="RoleCode">
+            <el-select v-model="addForm.RoleCode" size="mini">
+              <el-option
+                v-for="item in roleList"
+                :key="item.Id"
+                :label="item.RoleName"
+                :value="item.RoleCode"
+              ></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="登录名称" prop="UserName">
+            <el-input v-model="addForm.UserName" size="mini"></el-input>
+          </el-form-item>
+          <el-form-item label="登录密码" prop="UserPasswordming">
+            <el-input
+              type="password"
+              v-model="addForm.UserPasswordming"
+              size="mini"
+            ></el-input>
+          </el-form-item>
+        </el-row>
         <el-form-item label="用户姓名" prop="FullName">
           <el-input v-model="addForm.FullName" size="mini"></el-input>
         </el-form-item>
@@ -181,10 +172,19 @@
         <el-form-item label="备注" prop="Remark">
           <el-input v-model="addForm.Remark" size="mini"></el-input>
         </el-form-item>
+        <el-form-item>
+          <el-checkbox v-model="addForm.IsActive">激活</el-checkbox>
+        </el-form-item>
+        <el-form-item>
+          <el-checkbox v-model="addForm.Authority">售水权限</el-checkbox>
+        </el-form-item>
+        <el-form-item>
+          <el-checkbox v-model="addForm.IsAppUser">app用户</el-checkbox>
+        </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button @click="addDialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="addUser">确 定</el-button>
+        <el-button type="primary" @click="addUserSubmit">确 定</el-button>
       </span>
     </el-dialog>
     <el-dialog
@@ -195,58 +195,81 @@
     >
       <!--            内容会主体区-->
       <el-form
-        :model="userToEdit"
+        :model="user"
+        :inline="true"
         :rules="addFormRules"
         ref="editFormRef"
-        label-width="70px"
+        label-width="110px"
       >
-        <el-form-item label="用户名" prop="username">
-          <el-input v-model="userToEdit.username" disabled></el-input>
+        <el-row>
+          <el-col :span="8">
+            <el-form-item label="所属行政区域 " prop="WaterAreaId">
+              <el-input v-model="area" size="mini" disabled></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item label="所属水管区域" prop="AreaId">
+              <el-input v-model="waterArea" size="mini" disabled></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item label="用户编码" prop="UserCode">
+              <el-input v-model="addForm.UserCode" size="mini"></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-form-item label="角色" prop="RoleCode">
+            <el-select v-model="editForm.RoleCode" size="mini">
+              <el-option
+                v-for="item in roleList"
+                :key="item.Id"
+                :label="item.RoleName"
+                :value="item.RoleCode"
+              ></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="登录名称" prop="UserName">
+            <el-input v-model="editForm.UserName" size="mini"></el-input>
+          </el-form-item>
+          <el-form-item label="登录密码" prop="UserPasswordming">
+            <el-input
+              type="password"
+              v-model="editForm.UserPasswordming"
+              size="mini"
+            ></el-input>
+          </el-form-item>
+        </el-row>
+        <el-form-item label="用户姓名" prop="FullName">
+          <el-input v-model="editForm.FullName" size="mini"></el-input>
         </el-form-item>
-        <el-form-item label="邮箱" prop="email">
-          <el-input v-model="userToEdit.email"></el-input>
+        <el-form-item label="手机号" prop="Mobile">
+          <el-input v-model="editForm.Mobile" size="mini"></el-input>
         </el-form-item>
-        <el-form-item label="手机" prop="mobile">
-          <el-input v-model="userToEdit.mobile"></el-input>
+        <el-form-item label="E-mail" prop="Email">
+          <el-input v-model="editForm.Email" size="mini"></el-input>
+        </el-form-item>
+        <el-form-item label="地址" prop="Address">
+          <el-input v-model="editForm.Address" size="mini"></el-input>
+        </el-form-item>
+        <el-form-item label="备注" prop="Remark">
+          <el-input v-model="editForm.Remark" size="mini"></el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-checkbox v-model="editForm.IsActive">激活</el-checkbox>
+        </el-form-item>
+        <el-form-item>
+          <el-checkbox v-model="editForm.Authority">售水权限</el-checkbox>
+        </el-form-item>
+        <el-form-item>
+          <el-checkbox v-model="editForm.IsAppUser">app用户</el-checkbox>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="editDialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="editUser">确 定</el-button>
-      </span>
-    </el-dialog>
-    <el-dialog
-      title="修改角色"
-      :visible.sync="roleAllotDialogVisible"
-      width="50%"
-    >
-      <el-form
-        :model="userToAllot"
-        :rules="addFormRules"
-        ref="roleAllotFormRef"
-        label-width="70px"
-      >
-        <el-form-item label="用户名" prop="username">
-          <el-input v-model="userToAllot.username" disabled></el-input>
-        </el-form-item>
-        <el-form-item label="现角色" prop="role_name">
-          <el-input v-model="userToAllot.role_name" disabled></el-input>
-        </el-form-item>
-        <el-form-item label="新角色" prop="new_role_name">
-          <el-select v-model="roleSelected" placeholder="请选择新角色">
-            <el-option
-              v-for="role in roleList"
-              :key="role.id"
-              :label="role.roleName"
-              :value="role.id"
-            >
-            </el-option>
-          </el-select>
-        </el-form-item>
-      </el-form>
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="roleAllotDialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="confirmUserRoleChange"
+        <el-button size="mini" @click="editDialogVisible = false"
+          >取 消</el-button
+        >
+        <el-button size="mini" type="primary" @click="editUserSubmit"
           >确 定</el-button
         >
       </span>
@@ -255,32 +278,17 @@
 </template>
 
 <script>
+import rules from '@/utils/rules'
 export default {
   name: 'Users',
   data() {
-    // 校验规则
-    let checkEmail = (rule, value, cb) => {
-      const regEmail = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(\.[a-zA-Z0-9_-])+/
-      if (regEmail.test(value)) {
-        return cb()
-      }
-      cb(new Error('请输入合法邮箱'))
-    }
-    let checkMobile = (rule, value, cb) => {
-      const regMobile = /^(13[0-9]|14[01456879]|15[0-3,5-9]|16[2567]|17[0-8]|18[0-9]|19[0-3,5-9])\d{8}$/
-      if (regMobile.test(value)) {
-        return cb()
-      }
-      cb(new Error('请输入合法手机号'))
-    }
     return {
       user: {},
       areas: [],
-      province: '陕西省',
-      city: '宝鸡市',
-      district: '陈仓区水利局',
+      area: '陕西省宝鸡市陈仓区',
+      waterArea: '陈仓区水利局',
       roleList: [],
-      roleValue: 'user',
+      roleValue: '',
       queryInfo: {
         query: '',
         pagenum: 1,
@@ -290,79 +298,49 @@ export default {
       total: 0,
       addDialogVisible: false,
       addForm: {
-        WaterAreaId: '',
-        AreaId: '',
-        UserCode: '',
-        UserName: '',
-        UserPassword: '',
-        Authority: '',
-        FullName: '',
-        Mobile: '',
-        Email: '',
         Address: '',
-        Remark: ''
+        AreaId: 5,
+        AuditFlag: 0,
+        Authority: 0,
+        Email: '',
+        FullName: '',
+        IsActive: 0,
+        IsAppUser: 0,
+        Mobile: '',
+        ParentUserCode: null,
+        Remark: '',
+        RoleCode: null,
+        UserCode: null,
+        UserName: '',
+        UserPasswordming: '',
+        WaterAreaId: 1
       },
       addFormRules: {
-        UserCode: [
-          {
-            required: true,
-            message: '请填写用户编码',
-            trigger: 'blur'
-          }
-        ],
-
-        UserName: [
-          {
-            required: true,
-            message: '请输入用户名',
-            trigger: 'blur'
-          },
-          {
-            min: 5,
-            max: 15,
-            message: '用户名的字数在5-15个字符',
-            trigger: 'blur'
-          }
-        ],
-        UserPassword: [
-          {
-            required: true,
-            message: '请输入密码',
-            trigger: 'blur'
-          },
-          {
-            min: 6,
-            max: 15,
-            message: '用户名的字数在6-15个字符',
-            trigger: 'blur'
-          }
-        ],
-        Email: [
-          {
-            validator: checkEmail,
-            message: '请输入合法邮箱',
-            trigger: 'blur'
-          }
-        ],
-        Mobile: [
-          {
-            required: true,
-            message: '请输入手机号',
-            trigger: 'blur'
-          },
-          {
-            validator: checkMobile,
-            message: '请输入合法手机号',
-            trigger: 'blur'
-          }
-        ]
+        UserCode: [rules.required],
+        UserName: [rules.required, rules.minMax(5, 15)],
+        UserPasswordming: [rules.required, rules.minMax(6, 15)],
+        Email: [rules.email],
+        Mobile: [rules.required, rules.phone]
       },
-      editDialogVisible: false,
-      userToEdit: {},
-      roleAllotDialogVisible: false,
-      userToAllot: {},
-      roleSelected: '',
-      rightsAllotDialogVisible: false
+      editForm: {
+        Address: '',
+        AreaId: 5,
+        AuditFlag: 0,
+        Authority: 0,
+        Email: '',
+        FullName: '',
+        IsActive: 0,
+        IsAppUser: 0,
+        Mobile: '',
+        ParentUserCode: null,
+        Remark: '',
+        RoleCode: null,
+        UserCode: null,
+        UserName: '',
+        UserPasswordming: '',
+        WaterAreaId: 1
+      },
+      editDialogVisible: false
     }
   },
   mounted() {
@@ -370,6 +348,8 @@ export default {
     this.roleList = this.$store.getters.getRoleList
     this.areas = this.$store.getters.getAreas
     this.user = this.$store.getters.getUser
+    this.addForm.ParentUserCode = this.user.usercode
+    console.log(this.user)
   },
   methods: {
     async getUserList() {
@@ -407,33 +387,26 @@ export default {
     addDialogClose() {
       this.$refs.addFormRef.resetFields()
     },
-    addUser() {
+    addUserSubmit() {
       this.$refs.addFormRef.validate(async valid => {
-        if (!valid) return
-        if (this.province === '陕西省') {
-          this.province = 1
+        if (!valid) {
+          this.$message.error('请按提示要求填写表格')
+        } else {
+          const { data: res } = await this.$http.post(
+            '/api/users',
+            this.addForm
+          )
+          if (res.meta.status !== 200) {
+            return this.$message.error(res.meta.msg + ':(')
+          }
+          this.$message.success('成功添加用户:)')
+          this.addDialogVisible = false
+          await this.getUserList()
         }
-        if (this.district === '陈仓区水利局') {
-          this.district = 1
-        }
-        if (this.roleValue === 'user') {
-          this.roleValue = 0
-        }
-        this.addForm.AreaId = this.province.toString()
-        this.addForm.Authority = this.roleValue
-        this.addForm.WaterAreaId = this.district.toString()
-        this.addForm.ParentCode = this.user.usercode
-        const { data: res } = await this.$http.post('/api/users', this.addForm)
-        if (res.meta.status !== 200) {
-          return this.$message.error(res.meta.msg + ':(')
-        }
-        this.$message.success(res.meta.msg + ':)')
-        this.addDialogVisible = false
-        await this.getUserList()
       })
     },
-    showEditDialog(scope) {
-      this.userToEdit = scope
+    showEditDialog(user) {
+      this.editForm = JSON.parse(JSON.stringify(user))
       this.editDialogVisible = true
     },
     editDialogClose() {
