@@ -15,6 +15,11 @@ import './assets/font/iconfont.css'
 import 'nprogress/nprogress.css'
 
 import axios from 'axios'
+
+import SocketService from '@/utils/ws'
+Vue.prototype.$ws = SocketService.Instance
+SocketService.Instance.connect()
+
 // axios.defaults.baseURL = 'localhost:5000'
 axios.interceptors.request.use(config => {
   NProgress.start()

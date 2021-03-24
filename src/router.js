@@ -48,7 +48,7 @@ import MeasureEquipmentType from './components/settings/basicInfo/MeasureEquipme
 import WellEquipmentModel from './components/settings/basicInfo/WellEquipmentModel'
 import MaintenanceStaff from './components/settings/basicInfo/MaintenanceStaff'
 import NotFound from './components/NotFound'
-import LiveData from './components/liveInfo/LiveData'
+// import LiveData from './components/liveInfo/LiveData'
 import WaterCardInfo from './components/statistic/WaterCardInfo'
 import LiveCams from './components/liveInfo/LiveCharts'
 import AddAWell from './components/settings/AddAWell'
@@ -56,6 +56,7 @@ import AMap from './components/AMap'
 import Test from './components/Test'
 import DataDownload from './components/statistic/DataDownload'
 import RptChargedDetail from '@/components/statistic/RptChargedDetail'
+import MenuManagement from '@/components/settings/MenuManagement'
 
 Vue.use(Router)
 const router = new Router({
@@ -70,7 +71,7 @@ const router = new Router({
       children: [
         { path: '/test', component: Test },
         { path: '/monitor/remote.do', component: LiveCams },
-        { path: '/monitor/data.do', component: LiveData },
+        { path: '/monitor/data.do', component: Test },
         { path: '/welcome', component: Welcome },
         { path: '/monitor/map.do', component: AMap },
         { path: '/sysUser/index.do', component: Users },
@@ -153,6 +154,7 @@ const router = new Router({
         { path: '/sysWaterArea/index.do', component: WaterAdmins },
         { path: '/baseDeviceInfo/index.do', component: WellManagement },
         { path: '/addAWell', component: AddAWell },
+        { path: '/sys/menuManagement', component: MenuManagement },
         {
           path: '/waterPrive/index.do',
           component: ParaSettingsHome,

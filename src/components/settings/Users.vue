@@ -40,24 +40,24 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="user in userList" :key="user.Id">
-            <td>{{ user.UserCode }}</td>
-            <td>{{ user.UserName }}</td>
-            <td>{{ user.FullName }}</td>
-            <td>{{ user.Mobile }}</td>
-            <td>{{ user.AreaId }}</td>
-            <td>{{ user.WaterAreaId }}</td>
-            <td>{{ user.Remark }}</td>
-            <td>
+          <tr v-for="item in userList" :key="item.Id">
+            <td>{{ item.UserCode }}</td>
+            <td>{{ item.UserName }}</td>
+            <td>{{ item.FullName }}</td>
+            <td>{{ item.Mobile }}</td>
+            <td>{{ item.AreaId }}</td>
+            <td>{{ item.WaterAreaId }}</td>
+            <td>{{ item.Remark }}</td>
+            <td v-show="item.ParentUserCode === user.usercode">
               <el-switch
-                v-model="user.IsActive"
+                v-model="item.IsActive"
                 active-color="#13ce66"
                 inactive-color="#ff4949"
-                @change="userStateChange(user.Id, user.IsActive)"
+                @change="userStateChange(item.Id, item.IsActive)"
               >
               </el-switch>
             </td>
-            <td>
+            <td v-show="item.ParentUserCode === user.usercode">
               <el-tooltip
                 class="item"
                 effect="dark"
@@ -70,7 +70,7 @@
                   icon="el-icon-edit"
                   size="mini"
                   circle
-                  @click="showEditDialog(user)"
+                  @click="showEditDialog(item)"
                 ></el-button>
               </el-tooltip>
               <el-tooltip
@@ -85,7 +85,7 @@
                   icon="el-icon-delete"
                   size="mini"
                   circle
-                  @click="deleteUser(user.Id)"
+                  @click="deleteUser(item.Id)"
                 ></el-button>
               </el-tooltip>
             </td>
@@ -195,7 +195,7 @@
     >
       <!--            内容会主体区-->
       <el-form
-        :model="user"
+        :model="editForm"
         :inline="true"
         :rules="addFormRules"
         ref="editFormRef"
@@ -214,7 +214,7 @@
           </el-col>
           <el-col :span="8">
             <el-form-item label="用户编码" prop="UserCode">
-              <el-input v-model="addForm.UserCode" size="mini"></el-input>
+              <el-input v-model="editForm.UserCode" size="mini"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
@@ -349,7 +349,6 @@ export default {
     this.areas = this.$store.getters.getAreas
     this.user = this.$store.getters.getUser
     this.addForm.ParentUserCode = this.user.usercode
-    console.log(this.user)
   },
   methods: {
     async getUserList() {
@@ -371,7 +370,7 @@ export default {
       this.getUserList(this.queryInfo)
     },
     async userStateChange(id, IsActive) {
-      const { data: res } = await this.$http.put(`/api/user/${id}`, {
+      const { data: res } = await this.$http.put(`/api/userState/${id}`, {
         userstate: IsActive
       })
       if (res.meta.status !== 200) {
@@ -406,30 +405,32 @@ export default {
       })
     },
     showEditDialog(user) {
+      console.log(user)
       this.editForm = JSON.parse(JSON.stringify(user))
       this.editDialogVisible = true
     },
-    editDialogClose() {
-      this.$refs.editFormRef.resetFields()
-    },
-    editUser() {
+
+    editUserSubmit() {
       this.$refs.editFormRef.validate(async valid => {
         if (!valid) {
-          return
-        }
-        const { email, mobile } = this.userToEdit
-        const { data: res } = await this.$http.put(
-          `users/${this.userToEdit.id}`,
-          {
-            email,
-            mobile
+          this.$message.error('请按提示填写表格')
+        } else {
+          const { data: res } = await this.$http.put(
+            `/api/userEdit`,
+            this.editForm
+          )
+          if (res.meta.status !== 200) {
+            this.$message.error('修改用户失败')
+            return
           }
-        )
-        if (res.meta.status !== 200) return this.$message.error('修改用户失败')
-        this.$message.success('修改用户成功')
-        await this.getUserList()
-        this.editDialogVisible = false
+          this.$message.success('修改用户成功')
+          await this.getUserList()
+          this.editDialogVisible = false
+        }
       })
+    },
+    editDialogClose() {
+      this.$refs.editFormRef.resetFields()
     },
     async deleteUser(id) {
       const confirmRes = await this.$confirm(
