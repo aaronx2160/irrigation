@@ -472,12 +472,14 @@ export default {
     }
   },
   mounted() {
+    // this.$ws.registerCallback()
     this.$store.dispatch(GETLIVEDATALIST).then(() => {
       this.wellList = this.$store.getters.getLiveData
       this.handlePageChange(this.pageNum)
     })
   },
   methods: {
+    getData(){},
     handlePageChange(pageNum) {
       let arrToPagenate = this.filterOn ? this.wellListFiltered : this.wellList
       const pageData = pageNation(arrToPagenate, pageNum, this.scale)

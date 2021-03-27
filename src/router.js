@@ -48,7 +48,7 @@ import MeasureEquipmentType from './components/settings/basicInfo/MeasureEquipme
 import WellEquipmentModel from './components/settings/basicInfo/WellEquipmentModel'
 import MaintenanceStaff from './components/settings/basicInfo/MaintenanceStaff'
 import NotFound from './components/NotFound'
-// import LiveData from './components/liveInfo/LiveData'
+import LiveData from './components/liveInfo/LiveData'
 import WaterCardInfo from './components/statistic/WaterCardInfo'
 import LiveCams from './components/liveInfo/LiveCharts'
 import AddAWell from './components/settings/AddAWell'
@@ -71,7 +71,7 @@ const router = new Router({
       children: [
         { path: '/test', component: Test },
         { path: '/monitor/remote.do', component: LiveCams },
-        { path: '/monitor/data.do', component: Test },
+        { path: '/monitor/data.do', component: LiveData },
         { path: '/welcome', component: Welcome },
         { path: '/monitor/map.do', component: AMap },
         { path: '/sysUser/index.do', component: Users },

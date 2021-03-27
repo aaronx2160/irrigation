@@ -13,17 +13,27 @@ export default {
       allData: null,
       startValue: 0,
       endValue: 9,
-      timeId: null
+      timeId: null,
+      socketType:'getLiveData'
     }
+  },
+  created() {
+    this.$ws.registerCallback(this.socketType, this.getData)
   },
   mounted() {
     this.init()
     window.addEventListener('resize', this.screenAdapter)
     this.chartInstance.resize()
+    this.$ws.send({
+      action: 'getData',
+      socketType: this.socketType,
+      value: ''
+    })
   },
   destroyed() {
     window.removeEventListener('resize', this.screenAdapter)
     clearInterval(this.timeId)
+    this.$ws.unregisterCallback('this.socketType')
   },
   methods: {
     init() {
@@ -49,11 +59,12 @@ export default {
       this.chartInstance.on('mouseout', () => {
         this.startInterval()
       })
-      this.getData()
+      // this.getData()
       this.chartInstance.resize()
     },
-    getData() {
-      this.allData = this.$store.getters.getLiveData
+    getData(ret) {
+      // this.allData = this.$store.getters.getLiveData
+      this.allData = ret
       this.updateChart()
       this.screenAdapter()
       this.startInterval()
@@ -109,7 +120,7 @@ export default {
     },
     screenAdapter() {
       const titleFontSize =
-        (this.$refs.wellWaterUsageRef.offsetWidth / 100) * 3.6
+          (this.$refs.wellWaterUsageRef.offsetWidth / 100) * 3.6
       const adapterOption = {
         title: {
           textStyle: {

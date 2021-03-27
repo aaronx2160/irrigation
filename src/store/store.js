@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import persistedState from 'vuex-persistedstate'
 import axios from 'axios'
+
 import {
   CHANGEUSR,
   GETAREAS,
@@ -109,6 +110,7 @@ export default new Vuex.Store({
       }
     },
     async getLiveDataList(context) {
+
       const { data: res } = await axios.get('/api/liveDataList')
       if (res.meta.status !== 200) {
         return { msg: res.meta.msg }

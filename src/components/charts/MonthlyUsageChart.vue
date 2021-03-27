@@ -14,17 +14,32 @@ export default {
       allData: null,
       area: null,
       waterUsageData: null,
-      titleFontSize: 0
+      titleFontSize: 0,
+      socketType:'monthlyUsage'
     }
+  },
+  created() {
+    this.$ws.registerCallback(this.socketType,this.getData)
   },
   mounted() {
     this.init()
-    this.getData()
     window.addEventListener('resize', this.screenAdapter)
     this.screenAdapter()
+    const wellList = this.$store.getters.getWellList
+    const deviceCode = getWellInfoArr(wellList, 'DeviceCode')
+    const year = new Date().getFullYear()
+    this.$ws.send({
+      action: 'getData',
+      socketType: this.socketType,
+      value: {
+        deviceCode,
+        year
+      }
+    })
   },
   destroyed() {
     window.removeEventListener('resize', this.screenAdapter)
+    this.$ws.unregisterCallback(this.socketType)
   },
   methods: {
     init() {
@@ -58,15 +73,16 @@ export default {
 
       this.chartInstance.setOption(initOption)
     },
-    async getData() {
-      const wellList = this.$store.getters.getWellList
-      const deviceCode = getWellInfoArr(wellList, 'DeviceCode')
-      const year = new Date().getFullYear()
-      const { data: res } = await this.$http.post('/api/waterUsage', {
-        deviceCode,
-        year
-      })
-      this.allData = res.data
+    async getData(ret) {
+      //http改造成websocket链接
+      // const wellList = this.$store.getters.getWellList
+      // const deviceCode = getWellInfoArr(wellList, 'DeviceCode')
+      // const year = new Date().getFullYear()
+      // const { data: res } = await this.$http.post('/api/waterUsage', {
+      //   deviceCode,
+      //   year
+      // })
+      this.allData = ret
       this.updateChart()
     },
     updateChart() {

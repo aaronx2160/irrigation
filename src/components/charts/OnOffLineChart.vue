@@ -23,16 +23,25 @@ export default {
       seriesData: {},
       dataIndex: 0,
       tittleArr: ['网络', '水卡', '水泵'],
-      titleFontSize: 0
+      titleFontSize: 0,
+      socketType:'getLiveData'
     }
+  },
+  created() {
+    this.$ws.registerCallback(this.socketType,this.getData)
   },
   mounted() {
     this.init()
-    this.getData()
     window.addEventListener('resize', this.screenAdaptor)
+    this.$ws.send({
+      action: 'getData',
+      socketType: this.socketType,
+      value: ''
+    })
   },
   destroyed() {
     window.removeEventListener('resize', this.screenAdaptor)
+    this.$ws.unregisterCallback(this.socketType,this.getData)
   },
   methods: {
     init() {
@@ -70,8 +79,10 @@ export default {
       this.chartInstance.resize()
       this.screenAdaptor()
     },
-    getData() {
-      this.allData = this.$store.getters.getLiveData
+    getData(ret) {
+      console.log(ret)
+      // this.allData = this.$store.getters.getLiveData
+      this.allData=ret
       this.allData.map(v => {
         v.NetState = v.NetState === 1 ? '在线' : '离线'
         v.PumpState = v.PumpState === 1 ? '开启' : '关闭'

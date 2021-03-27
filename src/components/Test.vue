@@ -1,158 +1,160 @@
 <template>
-  <div class="container">
-    <div id="chart" ref="wellWaterUsageRef"></div>
+  <div className="container">
+    <div id="chart" ref="monthlyUsageRef"></div>
   </div>
 </template>
 
 <script>
+import getWellInfoArr from "@/utils/getWellInfo";
+
 export default {
-  name: 'wellWaterUsageRank',
+  name: 'MonthlyUsage',
   data() {
     return {
       chartInstance: null,
       allData: null,
-      startValue: 0,
-      endValue: 9,
-      timeId: null
+      area: null,
+      waterUsageData: null,
+      titleFontSize: 0
     }
-  },
-  created() {
-    this.$ws.registerCallback('waterUsageRankData', this.getData)
   },
   mounted() {
     this.init()
+    this.getData()
     window.addEventListener('resize', this.screenAdapter)
-    this.chartInstance.resize()
-    this.$ws.send({
-      action: 'getData',
-      socketType: 'waterUsageRankData',
-      value: ''
-    })
+    this.screenAdapter()
   },
   destroyed() {
     window.removeEventListener('resize', this.screenAdapter)
-    clearInterval(this.timeId)
-    this.$ws.unregisterCallback('waterUsageRankData')
   },
   methods: {
     init() {
-      this.chartInstance = this.$echarts.init(this.$refs.wellWaterUsageRef)
+      this.chartInstance = this.$echarts.init(this.$refs.monthlyUsageRef)
       const initOption = {
-        title: { text: '| 水井实时用水排行', top: 20, left: 20 },
+        title: {
+          text: '每月用水趋势',
+          textStyle: {
+            fontSize: 30
+          }
+        },
         grid: {
-          top: '40%',
-          left: '5%',
-          right: '5%',
-          bottom: '5%',
+          left: '3%',
+          top: '35%',
+          right: '4%',
+          bottom: '1%',
           containLabel: true
         },
-        tooltip: { show: true },
-        xAxis: { type: 'category' },
-        yAxis: { type: 'value' },
-        series: [{ type: 'bar', label: { show: true, position: 'top' } }]
+        tooltip: {
+          trigger: 'axis'
+        },
+        legend: {left: 20, top: '15%', icon: 'circle'},
+        xAxis: {
+          type: 'category',
+          boundaryGap: false
+        },
+        yAxis: {
+          type: 'value'
+        }
       }
+
       this.chartInstance.setOption(initOption)
-      this.chartInstance.on('mouseover', () => {
-        clearInterval(this.timeId)
-      })
-      this.chartInstance.on('mouseout', () => {
-        this.startInterval()
-      })
-      // this.getData()
-      this.chartInstance.resize()
     },
-    getData(ret) {
-      console.log(ret)
-      this.allData = this.$store.getters.getLiveData
+    async getData() {
+      const wellList = this.$store.getters.getWellList
+      const deviceCode = getWellInfoArr(wellList, 'DeviceCode')
+      const year = new Date().getFullYear()
+      const {data: res} = await this.$http.post('/api/waterUsage', {
+        deviceCode,
+        year
+      })
+      this.allData = res.data
       this.updateChart()
-      this.screenAdapter()
-      this.startInterval()
     },
     updateChart() {
-      const colorArr = [
-        ['#0BA82C', '#4ff778'],
-        ['#2e72bf', '#23e5e5'],
-        ['#5052ee', '#ab6ee5']
+      const colorArr1 = [
+        'rgba(11,168,44,1)',
+        'rgba(44,110,255,1)',
+        'rgba(22,242,217,1)',
+        'rgba(254,33,30,1)',
+        'rgba(250,105,0,1)'
       ]
-      let wellArr = []
-      const valueArr = []
-      this.allData = this.allData.filter(v => {
-        return v.UseWater !== 0
-      })
-      this.allData.sort((a, b) => {
-        return b.UseWater - a.UseWater
-      })
+      const colorArr2 = [
+        'rgba(11,168,44,0.5)',
+        'rgba(44,110,255,0.5)',
+        'rgba(22,242,217,0.5)',
+        'rgba(254,33,30,0.5)',
+        'rgba(250,105,0,0.5)'
+      ]
+      const monthArr = []
+      let currentMonth = new Date().getMonth() + 1
+      for (let i = 1; i <= currentMonth; i++) {
+        monthArr.push(i + '月')
+      }
+      let chartSeriesData = {}
+      const areaNames = []
       this.allData.map(v => {
-        wellArr.push(v.DeviceName)
-        valueArr.push(v.UseWater)
+        if (areaNames.indexOf(v.village) === -1) {
+          areaNames.push(v.village)
+        }
       })
-      const dataOption = {
-        xAxis: { data: wellArr },
-        dataZoom: {
-          show: false,
-          startValue: this.startValue,
-          endValue: this.endValue
-        },
-        series: [
-          {
-            data: valueArr,
-            itemStyle: {
-              color: arg => {
-                let targetColor = null
-                if (arg.value > 1000) {
-                  targetColor = colorArr[0]
-                } else if (arg.value > 500) {
-                  targetColor = colorArr[1]
-                } else {
-                  targetColor = colorArr[2]
-                }
-                return new this.$echarts.graphic.LinearGradient(0, 0, 0, 1, [
-                  { offset: 0, color: targetColor[0] },
-                  { offset: 1, color: targetColor[1] }
-                ])
-              }
-            }
+
+      for (let i = 0; i < areaNames.length; i++) {
+        chartSeriesData[areaNames[i]] = [0, 0, 0, 0, 0]
+      }
+      for (let i = 0; i < this.allData.length; i++) {
+        chartSeriesData[this.allData[i].village][
+            this.allData[i].InMonth
+            ] += this.allData[i].UseWater
+      }
+      const seriesArr = []
+      const legendArr = []
+      Object.keys(chartSeriesData).forEach((key, index) => {
+        chartSeriesData[key].shift()
+        legendArr.push(key)
+        seriesArr.push({
+          name: key,
+          type: 'line',
+          data: chartSeriesData[key],
+          stack: 'trend',
+          areaStyle: {
+            color: new this.$echarts.graphic.LinearGradient(0, 0, 0, 1, [
+              {offset: 0, color: colorArr1[index]},
+              {offset: 1, color: colorArr2[index]}
+            ])
           }
-        ]
+        })
+      })
+
+      const dataOption = {
+        xAxis: {
+          data: monthArr
+        },
+        legend: {data: legendArr},
+        series: seriesArr
       }
       this.chartInstance.setOption(dataOption)
-    },
-    screenAdapter() {
-      const titleFontSize =
-        (this.$refs.wellWaterUsageRef.offsetWidth / 100) * 3.6
-      const adapterOption = {
-        title: {
-          textStyle: {
-            fontSize: 20
-          }
-        },
-        series: [
-          {
-            barWidth: titleFontSize,
-            itemStyle: {
-              barBorderRadius: function() {
-                return [titleFontSize / 2, titleFontSize / 2, 0, 0]
-              }
-            }
-          }
-        ]
-      }
-      this.chartInstance.setOption(adapterOption)
       this.chartInstance.resize()
     },
-    startInterval() {
-      if (this.timeId) {
-        clearInterval(this.timeId)
-      }
-      this.timeId = setInterval(() => {
-        this.startValue++
-        this.endValue++
-        if (this.endValue > this.allData.length - 1) {
-          this.startValue = 0
-          this.endValue = 9
+    screenAdapter() {
+      this.titleFontSize = (this.$refs.monthlyUsageRef.offsetWidth / 100) * 3.6
+
+      const adaptOption = {
+        title: {
+          textStyle: {
+            fontSize: this.titleFontSize
+          }
+        },
+        legend: {
+          itemWidth: this.titleFontSize,
+          itemHeight: this.titleFontSize,
+          itemGap: this.titleFontSize,
+          textStyle: {
+            fontSize: this.titleFontSize
+          }
         }
-        this.updateChart()
-      }, 2000)
+      }
+      this.chartInstance.setOption(adaptOption)
+      this.chartInstance.resize()
     }
   }
 }
@@ -160,11 +162,12 @@ export default {
 
 <style lang="less" scoped>
 .container {
-  height: 100%;
   width: 100%;
+  height: 100%;
+
   #chart {
-    height: 100%;
     width: 100%;
+    height: 100%;
   }
 }
 </style>
