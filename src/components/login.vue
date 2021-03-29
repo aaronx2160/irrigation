@@ -101,7 +101,7 @@ export default {
 <style lang="less" scoped>
 .login_container {
   height: 100%;
-  background: url('../assets/images/RicePaddy.jpg') no-repeat;
+  background-color: #019f89;
   background-size: 100%;
 }
 .login_box {

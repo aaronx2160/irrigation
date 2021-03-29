@@ -1,5 +1,9 @@
+
+
+
 export default class SocketService {
   static instance = null
+
   static get Instance() {
     if (!this.instance) {
       this.instance = new SocketService()
@@ -13,7 +17,8 @@ export default class SocketService {
     if (!window.WebSocket) {
       return console.log('websocket is not supported on your browser')
     }
-    this.ws = new WebSocket('ws://localhost:5001')
+
+    this.ws = new WebSocket('ws://106.14.35.126:5001')
     this.ws.onopen = () => {
       console.log('ws connected')
     }

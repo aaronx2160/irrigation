@@ -13,7 +13,6 @@ import 'element-ui/lib/theme-chalk/index.css'
 import './assets/css/global.css'
 import './assets/font/iconfont.css'
 import 'nprogress/nprogress.css'
-
 import axios from 'axios'
 
 import SocketService from '@/utils/ws'
@@ -44,9 +43,12 @@ Vue.config.productionTip = false
 Vue.use(ElementUI)
 Vue.component('downloadExcel', JsonExcel)
 
-new Vue({
-  router,
-  store,
-  vuetify,
-  render: h => h(App)
-}).$mount('#app')
+
+  new Vue({
+    router,
+    store,
+    vuetify,
+    render: h => h(App)
+  }).$mount('#app')
+
+
