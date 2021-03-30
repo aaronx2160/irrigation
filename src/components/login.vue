@@ -32,6 +32,7 @@
         </el-form-item>
       </el-form>
     </div>
+    <div class="footer">农业水价综合改革云平台<br>&copy;2020-2021陕西东远赛维科技有限公司</div>
   </div>
 </template>
 
@@ -124,7 +125,7 @@ export default {
   position: absolute;
   left: 50%;
   top: 50%;
-  transform: translate(-50%, -50%);
+  transform: translate(-50%, -70%);
   .avatar_box {
     height: 130px;
     width: 130px;
@@ -166,4 +167,13 @@ export default {
     }
   }
 }
+  .footer{
+    position: absolute;
+    bottom: 0;
+    background-color: rgba(0,0,0,0.3);
+    color: white;
+    width: 100%;
+    text-align: center;
+    padding: 5px 0;
+  }
 </style>
