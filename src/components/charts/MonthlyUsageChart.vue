@@ -15,34 +15,28 @@ export default {
       area: null,
       waterUsageData: null,
       titleFontSize: 0,
+      wsObj:{},
       socketType:'monthlyUsage'
     }
-  },
-  created() {
-    this.$ws.registerCallback(this.socketType,this.getData)
   },
   mounted() {
     this.init()
     window.addEventListener('resize', this.screenAdapter)
     this.screenAdapter()
-    const wellList = this.$store.getters.getWellList
-    const deviceCode = getWellInfoArr(wellList, 'DeviceCode')
-    const year = new Date().getFullYear()
-    this.$ws.send({
-      action: 'getData',
-      socketType: this.socketType,
-      value: {
-        deviceCode,
-        year
-      }
-    })
   },
   destroyed() {
     window.removeEventListener('resize', this.screenAdapter)
-    this.$ws.unregisterCallback(this.socketType)
   },
   methods: {
     init() {
+      const {VUE_APP_WSURL} = process.env
+      if(window.WebSocket){
+        this.wsObj = new WebSocket(VUE_APP_WSURL)
+        this.wsObj.onmessage = this.onWsMessage
+        this.wsObj.onopen = this.onWsOpen
+        this.wsObj.onerror = this.onWsError
+        this.wsObj.onclose = this.onWsClose
+      }
       this.chartInstance = this.$echarts.init(this.$refs.monthlyUsageRef)
       const initOption = {
         title: {
@@ -72,6 +66,31 @@ export default {
       }
 
       this.chartInstance.setOption(initOption)
+    },
+    onWsMessage(msg){
+      const res = JSON.parse(msg.data)
+      this.allData = res.data
+      this.updateChart()
+    },
+    onWsOpen(){
+      const wellList = this.$store.getters.getWellList
+      const deviceCode = getWellInfoArr(wellList, 'DeviceCode')
+      const year = new Date().getFullYear()
+      const query={
+        action: 'getData',
+        socketType: this.socketType,
+        value: {
+          deviceCode,
+          year
+        }
+      }
+      this.wsObj.send(JSON.stringify(query))
+    },
+    onWsError(e){
+      console.log(e)
+    },
+    onWsClose(){
+      console.log('ws closed')
     },
     async getData(ret) {
       //http改造成websocket链接

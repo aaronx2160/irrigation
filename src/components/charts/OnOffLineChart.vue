@@ -24,26 +24,42 @@ export default {
       dataIndex: 0,
       tittleArr: ['网络', '水卡', '水泵'],
       titleFontSize: 0,
-      socketType:'getLiveData'
+      socketType:'getLiveData',
+      wsObj:{}
     }
-  },
-  created() {
-    this.$ws.registerCallback(this.socketType,this.getData)
   },
   mounted() {
     this.init()
     window.addEventListener('resize', this.screenAdaptor)
-    this.$ws.send({
-      action: 'getData',
-      socketType: this.socketType,
-      value: ''
-    })
+    this.initWebsocket()
   },
   destroyed() {
     window.removeEventListener('resize', this.screenAdaptor)
-    this.$ws.unregisterCallback(this.socketType,this.getData)
   },
   methods: {
+    initWebsocket() {
+      const {VUE_APP_WSURL} = process.env
+      if (window.WebSocket) {
+        this.wsObj = new WebSocket(VUE_APP_WSURL)
+      }
+      this.wsObj.onmessage = this.onWsMessage
+      this.wsObj.onopen = this.onWsOpen
+      this.wsObj.onerror = this.onWsError
+      this.wsObj.onclose = this.onWsClose
+
+    },
+    onWsOpen() {
+      this.wsObj.send(JSON.stringify(
+          {
+            action: 'getData',
+            socketType: this.socketType,
+            value: ''
+          }))
+    },
+    onWsMessage(msg) {
+      let res=JSON.parse(msg.data)
+      this.getData(res.data)
+    },
     init() {
       this.chartInstance = this.$echarts.init(this.$refs.onOffLineRef)
       const initOption = {
@@ -79,10 +95,9 @@ export default {
       this.chartInstance.resize()
       this.screenAdaptor()
     },
-    getData(ret) {
-      console.log(ret)
+    getData(res) {
       // this.allData = this.$store.getters.getLiveData
-      this.allData=ret
+      this.allData=res
       this.allData.map(v => {
         v.NetState = v.NetState === 1 ? '在线' : '离线'
         v.PumpState = v.PumpState === 1 ? '开启' : '关闭'

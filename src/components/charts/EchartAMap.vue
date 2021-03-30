@@ -5,6 +5,7 @@
 </template>
 
 <script>
+
 export default {
   name: 'EchartAMap',
   data() {
@@ -78,6 +79,8 @@ export default {
     mapInit() {
       const amapComponent = this.chartInstance.getModel().getComponent('amap')
       // 获取高德地图实例，使用高德地图自带的控件
+      console.log(amapComponent)
+      console.log(this.$AMap)
       this.mapInstance = amapComponent.getAMap()
       let that = this
       new that.$AMap.DistrictSearch({

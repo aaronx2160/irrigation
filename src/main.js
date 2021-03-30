@@ -6,18 +6,15 @@ import ElementUI from 'element-ui'
 import JsonExcel from 'vue-json-excel'
 import NProgress from 'nprogress'
 import vuetify from './plugins/vuetify'
-import * as echarts from 'echarts'
 import 'echarts-extension-amap'
+import * as echarts from 'echarts'
+
 
 import 'element-ui/lib/theme-chalk/index.css'
 import './assets/css/global.css'
 import './assets/font/iconfont.css'
 import 'nprogress/nprogress.css'
 import axios from 'axios'
-
-import SocketService from '@/utils/ws'
-Vue.prototype.$ws = SocketService.Instance
-SocketService.Instance.connect()
 
 // axios.defaults.baseURL = 'localhost:5000'
 axios.interceptors.request.use(config => {
@@ -43,12 +40,9 @@ Vue.config.productionTip = false
 Vue.use(ElementUI)
 Vue.component('downloadExcel', JsonExcel)
 
-
   new Vue({
     router,
     store,
     vuetify,
     render: h => h(App)
   }).$mount('#app')
-
-

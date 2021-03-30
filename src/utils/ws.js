@@ -17,11 +17,8 @@ export default class SocketService {
     if (!window.WebSocket) {
       return console.log('websocket is not supported on your browser')
     }
-
     this.ws = new WebSocket('ws://106.14.35.126:5001')
-    this.ws.onopen = () => {
-      console.log('ws connected')
-    }
+    this.ws.onopen = this.onWsOpen
     this.ws.onclose = () => {
       console.log('ws connection closed')
     }
@@ -45,7 +42,14 @@ export default class SocketService {
     this.callBackMapping[socketType] = null
   }
 
+  onWsOpen(cb){
+if(cb){
+  console.log('ws connected')
+  cb()
+}
+  }
+
   send(data) {
-    this.ws.send(JSON.stringify(data))
+      this.ws.send(JSON.stringify(data))
   }
 }

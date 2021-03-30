@@ -14,32 +14,55 @@ export default {
       startValue: 0,
       endValue: 9,
       timeId: null,
-      socketType:'getLiveData'
+      socketType: 'getLiveData',
+      wsObj: {},
+      wsHeartflag: false,
+      reconnectTime: 0
     }
   },
   created() {
-    this.$ws.registerCallback(this.socketType, this.getData)
+    this.initWebsocket();
   },
   mounted() {
     this.init()
     window.addEventListener('resize', this.screenAdapter)
     this.chartInstance.resize()
-    this.$ws.send({
-      action: 'getData',
-      socketType: this.socketType,
-      value: ''
-    })
   },
   destroyed() {
     window.removeEventListener('resize', this.screenAdapter)
     clearInterval(this.timeId)
-    this.$ws.unregisterCallback('this.socketType')
   },
   methods: {
+    initWebsocket() {
+      const {VUE_APP_WSURL} = process.env
+      if (window.WebSocket) {
+        this.wsObj = new WebSocket(VUE_APP_WSURL)
+      }
+      this.wsObj.onmessage = this.onWsMessage
+      this.wsObj.onopen = this.onWsOpen
+      this.wsObj.onerror = this.onWsError
+      this.wsObj.onclose = this.onWsClose
+
+    },
+    onWsOpen() {
+      this.wsObj.send(JSON.stringify(
+          {
+            action: 'getData',
+            socketType: this.socketType,
+            value: ''
+          }))
+    },
+    onWsMessage(msg) {
+      let res=JSON.parse(msg.data)
+      this.allData = res.data
+      this.updateChart()
+      this.screenAdapter()
+      this.startInterval()
+    },
     init() {
       this.chartInstance = this.$echarts.init(this.$refs.wellWaterUsageRef)
       const initOption = {
-        title: { text: '| 水井实时用水排行', top: 20, left: 20 },
+        title: {text: '| 水井实时用水排行', top: 20, left: 20},
         grid: {
           top: '40%',
           left: '5%',
@@ -47,10 +70,10 @@ export default {
           bottom: '5%',
           containLabel: true
         },
-        tooltip: { show: true },
-        xAxis: { type: 'category' },
-        yAxis: { type: 'value' },
-        series: [{ type: 'bar', label: { show: true, position: 'top' } }]
+        tooltip: {show: true},
+        xAxis: {type: 'category'},
+        yAxis: {type: 'value'},
+        series: [{type: 'bar', label: {show: true, position: 'top'}}]
       }
       this.chartInstance.setOption(initOption)
       this.chartInstance.on('mouseover', () => {
@@ -61,13 +84,6 @@ export default {
       })
       // this.getData()
       this.chartInstance.resize()
-    },
-    getData(ret) {
-      // this.allData = this.$store.getters.getLiveData
-      this.allData = ret
-      this.updateChart()
-      this.screenAdapter()
-      this.startInterval()
     },
     updateChart() {
       const colorArr = [
@@ -88,7 +104,7 @@ export default {
         valueArr.push(v.UseWater)
       })
       const dataOption = {
-        xAxis: { data: wellArr },
+        xAxis: {data: wellArr},
         dataZoom: {
           show: false,
           startValue: this.startValue,
@@ -108,8 +124,8 @@ export default {
                   targetColor = colorArr[2]
                 }
                 return new this.$echarts.graphic.LinearGradient(0, 0, 0, 1, [
-                  { offset: 0, color: targetColor[0] },
-                  { offset: 1, color: targetColor[1] }
+                  {offset: 0, color: targetColor[0]},
+                  {offset: 1, color: targetColor[1]}
                 ])
               }
             }
@@ -131,7 +147,7 @@ export default {
           {
             barWidth: titleFontSize,
             itemStyle: {
-              barBorderRadius: function() {
+              barBorderRadius: function () {
                 return [titleFontSize / 2, titleFontSize / 2, 0, 0]
               }
             }
@@ -163,6 +179,7 @@ export default {
 .container {
   height: 100%;
   width: 100%;
+
   #chart {
     height: 100%;
     width: 100%;

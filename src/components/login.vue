@@ -42,8 +42,8 @@ export default {
   data() {
     return {
       loginForm: {
-        username: 'admin',
-        password: 'admin123456'
+        username: 'dongyuan',
+        password: 'dongyuan123'
       },
       loginFormRules: {
         username: [
@@ -75,7 +75,19 @@ export default {
       }
     }
   },
+  mounted(){
+    //绑定事件
+    window.addEventListener('keydown',this.keydown);
+  },
+  destroyed() {
+    window.removeEventListener('keydown',this.keydown,false)
+  },
   methods: {
+    keydown(e){
+      if(e.keyCode===13){
+        this.login()
+      }
+    },
     resetLoginForm() {
       this.$refs.loginFormRef.resetFields()
     },
