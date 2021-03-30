@@ -1,62 +1,62 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-const Login = () => import(/* webpackChunkName: "login" */ './components/login')
-import Home from './components/home'
-import Welcome from './components/Welcome'
-import Users from './components/settings/Users'
-import Rights from './components/settings/Rights'
-import Roles from './components/settings/Roles'
-import AgriUsagePlan from './components/waterRight/AgriUsagePlan'
-import BaseWaterCharge from './components/chargeAdmin/BaseWaterCharge'
-import WaterSourceChargeInfo from './components/chargeAdmin/WaterSourceChargeInfo'
-import MeasureTypeChargeInfo from './components/chargeAdmin/MeasureTypeChargeInfo'
-import WaterUsageInfo from './components/statistic/WaterUsageInfo'
-import DeviceInfo from './components/statistic/DeviceInfo'
-import DistAppendWaterInfo from './components/statistic/DistAppendWaterInfo'
-import DistWaterInfo from './components/statistic/DistWaterInfo'
-import PowerUsageInfo from './components/statistic/PowerUsageInfo'
-import WaterSaleInfo from './components/statistic/WaterSaleInfo'
-import RealTimeAlarmInfo from './components/alarm/RealTimeAlarmInfo'
-import DeviceAlarmHistory from './components/alarm/DeviceAlarmHistory'
-import WaterUsageChartAnalysis from './components/alarm/WaterUsageChartAnalysis'
-import ThreeRedLineInfo from './components/alarm/ThreeRedLineInfo'
-import AbnormalWellAnalysis from './components/alarm/AbnormalWellAnalysis'
-import AbnormalWellFixQuery from './components/alarm/AbnormalWellFixQuery'
-import Regions from './components/settings/Regions'
-import WaterAdmins from './components/settings/WaterAdmins'
-import WellManagement from './components/settings/WellManagement'
-import SysIntro from './components/anoucement/SysIntro'
-import Workflow from './components/anoucement/Workflow'
-import Help from './components/anoucement/Help'
-import ParaSettingsHome from './components/settings/paramSettings/ParaSettingsHome'
-import WaterFee from './components/settings/paramSettings/WaterFee'
-import WaterResource from './components/settings/paramSettings/WaterResource'
-import WaterMeter from './components/settings/paramSettings/WaterMeter'
-import ThreePhaseVoltage from './components/settings/paramSettings/ThreePhaseVoltage'
-import PowerSetting from './components/settings/paramSettings/PowerSetting'
-import ExceptParams from './components/settings/paramSettings/ExceptParams'
-import BasicInfoHome from './components/settings/basicInfo/BasicInfoHome'
-import Providers from './components/settings/basicInfo/Providers'
-import PumpPipeMaterial from './components/settings/basicInfo/PumpPipeMaterial'
-import WaterType from './components/settings/basicInfo/WaterType'
-import WellStatus from './components/settings/basicInfo/WellStatus'
-import WellUse from './components/settings/basicInfo/WellUse'
-import IrrigationPattern from './components/settings/basicInfo/IrrigationPattern'
-import IrrigationAreaType from './components/settings/basicInfo/IrrigationAreaType'
-import GeomorphicType from './components/settings/basicInfo/GeomorphicType'
-import MeasureEquipmentType from './components/settings/basicInfo/MeasureEquipmentType'
-import WellEquipmentModel from './components/settings/basicInfo/WellEquipmentModel'
-import MaintenanceStaff from './components/settings/basicInfo/MaintenanceStaff'
-import NotFound from './components/NotFound'
-import LiveData from './components/liveInfo/LiveData'
-import WaterCardInfo from './components/statistic/WaterCardInfo'
-import LiveCams from './components/liveInfo/LiveCharts'
-import AddAWell from './components/settings/AddAWell'
-import AMap from './components/AMap'
-import Test from './components/Test'
-import DataDownload from './components/statistic/DataDownload'
-import RptChargedDetail from '@/components/statistic/RptChargedDetail'
-import MenuManagement from '@/components/settings/MenuManagement'
+const Login = () => import(/* webpackChunkName: "home" */ './components/login')
+const Home = () => import(/* webpackChunkName: "home" */ './components/home')
+const Welcome = () => import(/* webpackChunkName: "home" */ './components/Welcome')
+const Users = () => import(/* webpackChunkName: "settings" */ './components/settings/Users')
+const Rights = () => import(/* webpackChunkName: "settings" */ './components/settings/Rights')
+const Roles = () => import(/* webpackChunkName: "settings" */ './components/settings/Roles')
+const AgriUsagePlan = () => import(/* webpackChunkName: "charge" */ './components/waterRight/AgriUsagePlan')
+const BaseWaterCharge = () => import(/* webpackChunkName: "charge" */ './components/chargeAdmin/BaseWaterCharge')
+const WaterSourceChargeInfo = () => import(/* webpackChunkName: "charge" */ './components/chargeAdmin/WaterSourceChargeInfo')
+const MeasureTypeChargeInfo = () => import(/* webpackChunkName: "charge" */ './components/chargeAdmin/MeasureTypeChargeInfo')
+const WaterUsageInfo = () => import(/* webpackChunkName: "statistic" */ './components/statistic/WaterUsageInfo')
+const DeviceInfo = () => import(/* webpackChunkName: "statistic" */ './components/statistic/DeviceInfo')
+const DistAppendWaterInfo = () => import(/* webpackChunkName: "statistic" */ './components/statistic/DistAppendWaterInfo')
+const DistWaterInfo = () => import(/* webpackChunkName: "statistic" */ './components/statistic/DistWaterInfo')
+const PowerUsageInfo = () => import(/* webpackChunkName: "statistic" */ './components/statistic/PowerUsageInfo')
+const WaterSaleInfo = () => import(/* webpackChunkName: "statistic" */ './components/statistic/WaterSaleInfo')
+const WaterCardInfo = () => import(/* webpackChunkName: "statistic" */ './components/statistic/WaterCardInfo')
+const DataDownload = () => import(/* webpackChunkName: "statistic" */ './components/statistic/DataDownload')
+const RptChargedDetail = () => import(/* webpackChunkName: "statistic" */ '@/components/statistic/RptChargedDetail')
+const RealTimeAlarmInfo = () => import(/* webpackChunkName: "alarm" */ './components/alarm/RealTimeAlarmInfo')
+const DeviceAlarmHistory = () => import(/* webpackChunkName: "alarm" */ './components/alarm/DeviceAlarmHistory')
+const WaterUsageChartAnalysis = () => import(/* webpackChunkName: "alarm" */ './components/alarm/WaterUsageChartAnalysis')
+const ThreeRedLineInfo = () => import(/* webpackChunkName: "alarm" */ './components/alarm/ThreeRedLineInfo')
+const AbnormalWellAnalysis = () => import(/* webpackChunkName: "alarm" */ './components/alarm/AbnormalWellAnalysis')
+const AbnormalWellFixQuery = () => import(/* webpackChunkName: "settings" */ './components/alarm/AbnormalWellFixQuery')
+const Regions = () => import(/* webpackChunkName: "settings" */ './components/settings/Regions')
+const WaterAdmins = () => import(/* webpackChunkName: "settings" */ './components/settings/WaterAdmins')
+const WellManagement = () => import(/* webpackChunkName: "settings" */ './components/settings/WellManagement')
+const MaintenanceStaff = () => import(/* webpackChunkName: "settings" */ './components/settings/basicInfo/MaintenanceStaff')
+const AddAWell = () => import(/* webpackChunkName: "settings" */ './components/settings/AddAWell')
+const MenuManagement = () => import(/* webpackChunkName: "settings" */ '@/components/settings/MenuManagement')
+const SysIntro = () => import(/* webpackChunkName: "anoucement" */ './components/anoucement/SysIntro')
+const Workflow = () => import(/* webpackChunkName: "anoucement" */ './components/anoucement/Workflow')
+const Help = () => import(/* webpackChunkName: "anoucement" */ './components/anoucement/Help')
+const ParaSettingsHome = () => import(/* webpackChunkName: "params" */ './components/settings/paramSettings/ParaSettingsHome')
+const WaterFee = () => import(/* webpackChunkName: "params" */ './components/settings/paramSettings/WaterFee')
+const WaterResource = () => import(/* webpackChunkName: "params" */ './components/settings/paramSettings/WaterResource')
+const WaterMeter = () => import(/* webpackChunkName: "params" */ './components/settings/paramSettings/WaterMeter')
+const ThreePhaseVoltage = () => import(/* webpackChunkName: "params" */ './components/settings/paramSettings/ThreePhaseVoltage')
+const PowerSetting = () => import(/* webpackChunkName: "params" */ './components/settings/paramSettings/PowerSetting')
+const ExceptParams = () => import(/* webpackChunkName: "params" */ './components/settings/paramSettings/ExceptParams')
+const BasicInfoHome = () => import(/* webpackChunkName: "basicInfo" */ './components/settings/basicInfo/BasicInfoHome')
+const Providers = () => import(/* webpackChunkName: "basicInfo" */ './components/settings/basicInfo/Providers')
+const PumpPipeMaterial = () => import(/* webpackChunkName: "basicInfo" */ './components/settings/basicInfo/PumpPipeMaterial')
+const WaterType = () => import(/* webpackChunkName: "basicInfo" */ './components/settings/basicInfo/WaterType')
+const WellStatus = () => import(/* webpackChunkName: "basicInfo" */ './components/settings/basicInfo/WellStatus')
+const WellUse = () => import(/* webpackChunkName: "basicInfo" */ './components/settings/basicInfo/WellUse')
+const IrrigationPattern = () => import(/* webpackChunkName: "basicInfo" */ './components/settings/basicInfo/IrrigationPattern')
+const IrrigationAreaType = () => import(/* webpackChunkName: "basicInfo" */ './components/settings/basicInfo/IrrigationAreaType')
+const GeomorphicType = () => import(/* webpackChunkName: "basicInfo" */ './components/settings/basicInfo/GeomorphicType')
+const MeasureEquipmentType = () => import(/* webpackChunkName: "basicInfo" */ './components/settings/basicInfo/MeasureEquipmentType')
+const WellEquipmentModel = () => import(/* webpackChunkName: "basicInfo" */ './components/settings/basicInfo/WellEquipmentModel')
+const LiveData = () => import(/* webpackChunkName: "liveInfo" */ './components/liveInfo/LiveData')
+const LiveCams = () => import(/* webpackChunkName: "liveInfo" */ './components/liveInfo/LiveCharts')
+const AMap = () => import(/* webpackChunkName: "map" */ './components/AMap')
+const Test = () => import(/* webpackChunkName: "test" */ './components/Test')
+const NotFound = () => import(/* webpackChunkName: "error" */ './components/NotFound')
 
 Vue.use(Router)
 const router = new Router({
